@@ -31,7 +31,7 @@ $user =~ s/IOINTEGRATION\\//g;
 $dbh = getDBConnection();	
 $dbh-> {'LongReadLen'} = 1000000; 
 print $cgi->header();
-print $cgi->start_html();
+print $cgi->start_html(-title=>"Tickets");
 print "<script language='javascript'>
 function changeText(thisField,thisText)
 {
@@ -116,17 +116,17 @@ $order_by = $cgi->param('order_by');
 $order_by = 'case_num' if ($order_by eq "");
 autoRefresh();
 background();
-$statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type FROM problems WHERE assigned_to like '$user' AND status <> 'Closed' AND status <> 'Awaiting Bug Fix' AND status <> 'Awaiting Feature Request' ORDER BY " . $order_by . " LIMIT 10";
-$statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type FROM problems WHERE assigned_to like '$user' AND status = 'Awaiting Bug Fix' ORDER BY " . $order_by if (param('showBugTickets')) . " LIMIT 10";
-$statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type FROM problems WHERE assigned_to like '$user' AND status = 'Awaiting Feature Request' ORDER BY " . $order_by if (param('showFeatureTickets')) . " LIMIT 10";
-$statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type FROM problems WHERE submitted_by like '%theapsgroup.com' ORDER BY date_mod DESC";
+$statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type, assigned_to FROM problems WHERE submitted_by like '%theapsgroup.com' AND status <> 'Closed' AND status <> 'Awaiting Bug Fix' AND status <> 'Awaiting Feature Request' ORDER BY " . $order_by;
+$statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type, assigned_to FROM problems WHERE submitted_by like '%theapsgroup.com' ORDER BY " . $order_by;
+$statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type, assigned_to FROM problems WHERE submitted_by like '%theapsgroup.com' AND status = 'Awaiting Bug Fix' ORDER BY " . $order_by if (param('showBugTickets'));
+$statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type, assigned_to FROM problems WHERE submitted_by like '%theapsgroup.com' AND status = 'Awaiting Feature Request' ORDER BY " . $order_by if (param('showFeatureTickets'));
 $showTicketsEnding = "&showBugTickets=yes" if (param('showBugTickets'));
 $showTicketsEnding = "&showFeatureTickets=yes" if (param('showFeatureTickets'));
 $test = $dbh->prepare($statement);
 $test->execute(); 
 my $modified = $cgi->param('modified');
 ioiFont("<b>Your ticket has been successfully updated</b>") if ($submit eq "yes");
-ioiFont("<p><a href = 'respondTicket.cgi?case_num=$modified&user=$user'>Click Here to Modify Your Recently Updated Ticket</a></p>") if ($modified);
+ioiFont("<p><a href = 'hd-respondTicket.cgi?case_num=$modified&user=$user'>Click Here to Modify Your Recently Updated Ticket</a></p>") if ($modified);
 ioiFont ("<input id='submit-ticket' type='button' value='Submit Ticket' onclick=\"window.location='hd-submit-ticket.cgi'\"/>");
 print "<input id='logout' type='button' value='Logout' onclick=\"window.location='hd-logout.cgi'\"/>";
 
@@ -136,8 +136,8 @@ ioiFont("<a href='helpdesk.cgi'>Back to my Active Tickets</a><p>") if (param('sh
 
  tableHead('90%');
  print"
- <th><a href='helpdesk.cgi?order_by=case_num$showTicketsEnding'>Case Number</a></th><th><a href='helpdesk.cgi?order_by=submitted_by$showTicketsEnding'>Submitted By</a></th><th><a href='helpdesk.cgi?order_by=short_desc$showTicketsEnding'>Subject</a></th><th><a href='helpdesk.cgi?order_by=date_mod$showTicketsEnding'>Last Modified</a></th><th><a href='helpdesk.cgi?order_by=status$showTicketsEnding'>Status</a></th><th>Actions</th>";
- while(($status, $submitted_by, $case_num, $date_mod, $time_mod, $short_desc, $prob_prod_link, $prob_comp_link, $updated_by , $priority) = $test->fetchrow_array())
+ <th><a href='helpdesk.cgi?order_by=case_num$showTicketsEnding'>Case Number</a></th><th><a href='helpdesk.cgi?order_by=submitted_by$showTicketsEnding'>Submitted By</a></th><th><a href='helpdesk.cgi?order_by=short_desc$showTicketsEnding'>Subject</a></th><th><a href='helpdesk.cgi?order_by=date_mod$showTicketsEnding'>Last Modified</a></th><th><a href='helpdesk.cgi?order_by=status$showTicketsEnding'>Status</a></th><th>Assigned To</th>";
+ while(($status, $submitted_by, $case_num, $date_mod, $time_mod, $short_desc, $prob_prod_link, $prob_comp_link, $updated_by , $priority, $assigned_to) = $test->fetchrow_array())
  {
 
 	$bgcolor = '#B0B0B0';
@@ -163,7 +163,7 @@ ioiFont("<a href='helpdesk.cgi'>Back to my Active Tickets</a><p>") if (param('sh
 	$bgcolor3 = "#0066CC" if ($priority eq "Low");
 	print "<tr bgcolor='$bgcolor'>
 		<td bgcolor = '$bgcolor2'>
-			<form action='respondTicket.cgi' name='form1' method='post'>
+			<form action='hd-respondTicket.cgi' name='form1' method='post'>
 				<input type='hidden' name='case_num' value='$case_num'>
 				<input type='hidden' name='user' value='$user'>
 				<input type='submit' value='$case_num' name='Edit' >
@@ -173,18 +173,7 @@ ioiFont("<a href='helpdesk.cgi'>Back to my Active Tickets</a><p>") if (param('sh
 		<td>$short_desc</td>
 		<td>$date_mod $time_mod</td>
 		<td bgcolor='$bgcolor3'>$status</td>
-		<td>
-			<form name='form2'>
-				<select id='$case_num' name='action_select' onChange='selectAction(document.getElementById(\"$case_num\").options[document.getElementById(\"$case_num\").selectedIndex].value, \"$case_num\")'>
-					<option>--Choose an action--</option>
-					<option value='change'>Change Contact</option>
-					<option value='append'>Append Ticket</option>
-					<option value='close'>Close Ticket</option>
-					<option value='closeNoResp'>Close Ticket (No Response)</option>
-					<option value='delete'>Delete Ticket</option>
-				</select>
-			</form>
-		</td></tr>";	
+		<td> $assigned_to</td></tr>";	
  }
  print "</table>";
  ioiFont("The blue subject lines represent tickets that were last updated by someone other than $user");
