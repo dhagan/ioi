@@ -45,6 +45,10 @@ $email_action = $cgi->param('email_action');
 $link = $cgi->param('link');
 ### DJH $user = $cgi->param('user');
 $user = getRemoteUser();
+# DJH 12/25/2020
+$sub_name = $cgi->param('sub_name');
+$sub_email = $cgi->param('sub_email');
+# end DJH 12/25/2020
 $assigned_to = $cgi->param('assigned_to');
 $status = $cgi->param('status');
 $priority = $cgi->param('priority');
@@ -112,27 +116,18 @@ if ($allow_submit == 1)
 		
 	#If an existing ticket
 	} elsif ($case_num ne "") {
-		$is_customer = $email_action eq "Email Client";
-                if ( $status =~ m/Closed/) {
-                    if ( $subject !~ m/(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.](19|20)\d\d$/) {
-                       $_date = time_format('dd/mm/yyyy');
-                        $subject .= $_date;
-                    }
-                }
 		$subject = $dbh->quote($subject);
-		$statement = "UPDATE problems SET date_mod = '$date', time_mod = '$submit_time', assigned_to = '$assigned_to',
-		status = '$status', prob_prod_link = '$product', prob_comp_link='$comp_case_num', short_desc = $subject, priority_type = '$priority', time_spent = '$time_spent',
-		xinet_ticket_num = '$xinet_ticket_num', bug_ticket_num = '$bug_ticket_num' WHERE case_num = '$case_num'";
+		$statement = "UPDATE problems SET date_mod = '$date', time_mod = '$submit_time' WHERE case_num = '$case_num'";
                 $sth = $dbh->prepare($statement) or die print $dbh->errstr;
 		$sth->execute() or die print $dbh->errstr;
                 $sth = $dbh->prepare("SELECT id FROM problems WHERE case_num = '$case_num'");
                 $sth->execute();
                 my $problem_id = $sth->fetchrow_array();
                 $description = $dbh->quote($problem);
-                my $description_updated_by = $dbh->quote("$user");
-                my $action = "Updated by $user";
-                my $is_customer = false;
-                my $statement = "INSERT INTO `descriptions` (problem_id, description, status, created, description_updated_by, action, is_customer) VALUES ('$problem_id', $description, '$status', NOW(), $description_updated_by, '$action', '$is_customer')";
+                my $description_updated_by = $sub_name . "<" . $sub_email . ">";
+                my $action = "Updated by $sub_name";
+                my $is_customer = true;
+                my $statement = "INSERT INTO `descriptions` (problem_id, description, status, created, description_updated_by, action, is_customer) VALUES ('$problem_id', $description, '$status', NOW(), '$description_updated_by', '$action', '$is_customer')";
                 $sth = $dbh->prepare($statement);
 		$sth->execute();
 		$dbh->commit() or die print $dbh->errstr;

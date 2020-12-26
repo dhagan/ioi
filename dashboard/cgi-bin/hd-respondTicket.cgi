@@ -292,55 +292,55 @@ if ($special_instructions) {;
 	}
 	function submitCheck()
 	{
-		if (document.form1.time_spent.value == 0)
-		{
-			alert('Time Spent is an invalid value');
-			return false;
-		}
-		if (document.form1.time_spent.value >= 1000)
-		{	
-					
-			var checkOver = confirm('This time spent value is too high, if this was meant to be the vendor ticket number click yes');
-			if (checkOver == true)
-			{
-				document.form1.xinet_ticket_num.value = document.form1.time_spent.value;
-			}
-			document.form1.time_spent.value = '';
-			return false;
-		}
-		if (document.form1.priority.value == '')
-		{
-			alert('Please set a priority');
-			return false;
-		}
-					
-					
-		if(document.form1.status.value == 'Open' || document.form1.status.value == 'Assigned')
-		{
-					alert('Please choose a Pending State');
-					return false;
-		}	
-		var time_already_spent = $time_spent;
-		var time_spent = document.form1.time_spent.value;
-		time_spent = parseInt(time_already_spent) + parseInt(time_spent);
-		document.form1.time_spent.value = time_spent;
+//		if (document.form1.time_spent.value == 0)
+//		{
+//			alert('Time Spent is an invalid value');
+//			return false;
+//		}
+//		if (document.form1.time_spent.value >= 1000)
+//		{	
+//					
+//			var checkOver = confirm('This time spent value is too high, if this was meant to be the vendor ticket number click yes');
+//			if (checkOver == true)
+//			{
+//				document.form1.xinet_ticket_num.value = document.form1.time_spent.value;
+//			}
+//			document.form1.time_spent.value = '';
+//			return false;
+//		}
+//		if (document.form1.priority.value == '')
+//		{
+//			alert('Please set a priority');
+//			return false;
+//		}
+//					
+//					
+//		if(document.form1.status.value == 'Open' || document.form1.status.value == 'Assigned')
+//		{
+//					alert('Please choose a Pending State');
+//					return false;
+//		}	
+//		var time_already_spent = $time_spent;
+//		var time_spent = document.form1.time_spent.value;
+//		time_spent = parseInt(time_already_spent) + parseInt(time_spent);
+//		document.form1.time_spent.value = time_spent;
 		return true;
 	
 	}
 	function formOnClick(thisAction)
 	{
-		if (thisAction == \"vendor\")
-		{
-			document.form1.email_action.value = 'Email Vendor';
-		}
-		if (thisAction == \"client\")
-		{
-			document.form1.email_action.value = 'Email Client';
-		}
-        if (thisAction == \"techs\")
-		{
-			document.form1.email_action.value = 'Email';
-		}
+//		if (thisAction == \"vendor\")
+//		{
+//			document.form1.email_action.value = 'Email Vendor';
+//		}
+//		if (thisAction == \"client\")
+//		{
+//			document.form1.email_action.value = 'Email Client';
+//		}
+//        if (thisAction == \"techs\")
+//		{
+//			document.form1.email_action.value = 'Email';
+//		}
 		if (thisAction == \"none\")
 		{
 			document.form1.email_action.value= 'Submit';
@@ -358,94 +358,38 @@ if ($special_instructions) {;
 	-->
 	</style>
 	<div align='left'>
-	<FORM NAME ='form1' ACTION=\"email2.cgi\" METHOD=\"POST\" ENCTYPE=\"multipart/form-data\" onSubmit= 'return submitCheck()'>
+	<FORM NAME ='form1' ACTION=\"hd-email2.cgi\" METHOD=\"POST\" ENCTYPE=\"multipart/form-data\" onSubmit= 'return submitCheck()'>
 	  <input type = 'hidden' name='user' value='$user'>
 	  <input type='hidden' name='email_action'>
-	  <input type= 'hidden' name='link' value = 'respondTicket.cgi?case_num=$case_num&user=$user'>
-	  <input type= 'hidden' name='case_num' value='$case_num'>";
+	  <input type= 'hidden' name='link' value = 'hd-respondTicket.cgi?case_num=$case_num&user=$user'>
+	  <input type= 'hidden' name='case_num' value='$case_num'>
+	  <input type= 'hidden' name='sub_name' value='$sub_name'>
+	  <input type= 'hidden' name='sub_email' value='$sub_email'>
+	  <input type= 'hidden' name='status' value='$status'>";
 	  ioiFont("<b>Submit and</b> <p>");
-	  print "<input type='submit' name='button' value='Email Vendor' onClick='formOnClick(\"vendor\")'>
-	  		<input type='submit' name='button' value='Email Client' onClick='formOnClick(\"client\")'>
-            <input type='submit' name='button' value='Email' onClick='formOnClick(\"techs\")'>
-	  		<input type='submit' name='button' value='Submit' onClick='formOnClick(\"none\")'>
-	  		
-	 <input type='hidden' name='comp_case_num' value='$comp_case_num'>
+	  print "<input type='submit' name='button' value='Submit' onClick='formOnClick(\"none\")'>
+	  	<input type='hidden' name='comp_case_num' value='$comp_case_num'>
 		<table width='95%' height='425'  border='1' cellpadding='1' cellspacing='0' bordercolor='#C0C0C0' bgcolor='#909090'>
+		  <tr bgcolor='#B0B0B0'>
+			<td colspan='2'><div align='left'><strong>Subject:</strong> $short_desc</div></td>
+		  </tr>
 		  <tr bgcolor='#909090'>
 			<td colspan='2'><div align='left'>Company: $comp_name, Billing/Shipping: $comp_bill_address</div></td>
 		  </tr>
 		  <tr>
 			<td colspan='2'><div align='left'>Customer Information: $sub_name, $sub_phone, $sub_email, 
-			<input type='button' onClick='window.open(\"management.cgi?contact=update&sub_login=$submitted_by&fromUpdate=Yes\", \"management\",\"width=400,height=400,left=0,top=0,scrollbar=yes\");return false;' value='View User Info' />
-			<input type='button' onClick='window.open(\"productCheck.cgi?prod_comp_link=$comp_case_num\",\"productCheck\",\"width=400,height=400,left=0,top=0,scrollbar=yes\");return false;' value='View Product Info' /></div>";
-			if ($special_instructions) {
-			print "<div><span class='blink' title='$special_instructions' style='color: #FF0000'>Special Instructions</span></div>";
-			}
-			print"</td>
 		  </tr>
 		  <tr bgcolor='#B0B0B0'>
 			<td width='21%'><div align='left'><strong>Ticket Number:</strong> $case_num </div></td>
-			<td width='31%'><div align='left'><strong>Date Open: </strong>$date_open</div></td>
+			<td width='31%'><div align='left'><strong>Date Open: </strong> $date_open</div></td>
 	          </tr>
 		  <tr bgcolor='#B0B0B0'>
-			<td width='22%'><div align='left'><strong>Product:</strong>          
-			  <select name='product' id='product'>";
-			  for ( $i= 0; $i<= $prod; $i++)
-			  {
-			  print "<option value='@prod_case_num[$i]'>@prod_name[$i]</option>";
-			  }
-			  print"
-						</select>
-			</div></td>
-			<td width='26%'><div align='left'><strong>Status:</strong>          
-			  <select name='status' id='status'>
-			  <option value='Open'>Open</option>
-			  <option value='Assigned'>Assigned</option>
-			  <option value='Pending IOI'>Pending IOI</option>
-			  <option value='Pending Client'>Pending Client</option>
-			  <option value='Pending Vendor'>Pending Vendor</option>
-			  <option value='Awaiting Feature Request'>Awaiting Feature Request</option>
-			  <option value='Awaiting Bug Fix'>Awaiting Bug Fix</option>
-			  <option value='Closed'>Closed</option>
-						</select>
-			</div></td>
+			<td width='22%'><div align='left'><strong>Product:</strong> $prod_name</div></td>
+			<td width='26%'><div align='left'><strong>Status:</strong> $status</div></td>
 		  </tr>
 		  <tr bgcolor='#B0B0B0'>
-			<td><div align='left'><strong>Priority: 
-			  <select name='priority'>
-				<option value=''></option>
-				<option value='Critical'>Critical</option>
-				<option value='High'>High</option>
-				<option value='Medium'>Medium</option>
-				<option value='Low'>Low</option>
-				<option value='Request'>Request</option>
-						</select>
-			</strong></div></td>
-			<td><b>Bug Ticket #</b> <input type='text' name='bug_ticket_num' value='$bug_ticket_num'></td>
+			<td><div align='left'><strong>Priority:</strong> $priority_type</div></td>
 	          </tr>
-		  <tr bgcolor='#B0B0B0'>
-			<td><div align='left'><strong>Time Spent :
-			  <input name='time_spent' type='text' autocomplete='off' size='5'>
-			  ($time_spent)        </strong></div></td>
-			<td><div align='left'><strong>Assigned To:</strong><select name='assigned_to' onChange='checkAssign(this.value)'>";
-			$sth = $dbh->prepare("select sa_login FROM staff WHERE sa_access <> 'Disabled' and sa_dept = 'IT'");
-			$sth->execute();
-			while($sa_login = $sth->fetchrow_array())
-			{
-				print "<option value='$sa_login'>$sa_login</option>";
-			}
-			print"</select></div></td>
-		  </tr>
-		  <tr bgcolor='#B0B0B0'>
-		  	<td colspan='2'><div align='left'><strong>Vendor Ticket #: 
-			  <input name='xinet_ticket_num' type='text' id='xinet_ticket_num' value='$ticket' >
-			</strong></div></td>
-	          </tr>
-		  <tr bgcolor='#B0B0B0'>
-			<td colspan='2'><div align='left'><strong>Subject</strong>
-			  <input name='subject' type='text' size='50' value=\"$short_desc\">
-			</div></td>
-		  </tr>
 		  <tr bgcolor='#B0B0B0'>
 			<td colspan='2'><div align='left'><strong>Problem</strong></div></td>
 		  </tr>
@@ -521,11 +465,7 @@ if ($special_instructions) {;
 	  </div></td></tr></table>
 	  <p>";
 	  ioiFont("<b>Submit and</b><p>");
-	  print"
-<input type='submit' name='button' value='Email Vendor' onClick='formOnClick(\"vendor\")'>
-	  		<input type='submit' name='button' value='Email Client' onClick='formOnClick(\"client\")'>
-            <input type='submit' name='button' value='Email' onClick='formOnClick(\"techs\")'>
-	  		<input type='submit' name='button' value='Submit' onClick='formOnClick(\"none\")'>
+	  print"<input type='submit' name='button' value='Submit' onClick='formOnClick(\"none\")'>
 	</p>
 	  </form>
 	</div>
@@ -737,7 +677,7 @@ sub getTicketInfo()
 	($sub_name,$sub_email,$sub_phone) = $sth->fetchrow_array();
 	$date_open =~ s/00:00:00//g;
 	$submitted_by =~ s/ /+/g;
-	print $cgi->redirect("respondTicket.cgi?newuser=yes&submitted_by=$submitted_by&case_num=$case_num&user=$user") if ($sub_comp_link eq "COMP0" and $newUserViewTicket ne "viewTicket");
+	print $cgi->redirect("hd-respondTicket.cgi?newuser=yes&submitted_by=$submitted_by&case_num=$case_num&user=$user") if ($sub_comp_link eq "COMP0" and $newUserViewTicket ne "viewTicket");
 	print $cgi->header() if ($newUserViewTicket ne "viewTicket");
 }
 sub splitProblem
@@ -747,10 +687,10 @@ sub splitProblem
         my $is_customer = false;
         my $ordering = 'ASC';
         if ($order eq "newestTop") {
-            print "<div align='left'><span class='toggle' onClick=\"parent.location='respondTicket.cgi?user=$user&case_num=$case_num&order=oldestTop'\">Order oldest to newest</span></div>";
+            print "<div align='left'><span class='toggle' onClick=\"parent.location='hd-respondTicket.cgi?user=$user&case_num=$case_num&order=oldestTop'\">Order oldest to newest</span></div>";
             $ordering = 'DESC';
         } else {
-            print "<div align='left'><span class='toggle' onClick=\"parent.location='respondTicket.cgi?user=$user&case_num=$case_num&order=newestTop'\">Order newest to oldest</span></div></div>";
+            print "<div align='left'><span class='toggle' onClick=\"parent.location='hd-respondTicket.cgi?user=$user&case_num=$case_num&order=newestTop'\">Order newest to oldest</span></div></div>";
             $ordering = 'ASC';
         }
 
