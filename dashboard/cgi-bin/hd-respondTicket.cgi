@@ -32,16 +32,6 @@ $dbh-> {'LongReadLen'} = 1000000;
 $cgi = new CGI;
 
 my $mycookie = 'ioidashboard';
-if ( $cgi->cookie($mycookie))
-{
-  # DJH no-op
-  $user = $cgi->cookie($mycookie);
-} else 
-{
-  print "Content-type: text/plain\n\n";
-  print "Can't find cookie $mycookie, you must authenticate FROM IOITicket.php";
-  exit;
-}
 
 $user = getRemoteUser();
 
@@ -292,11 +282,11 @@ if ($special_instructions) {;
 	}
 	function submitCheck()
 	{
-//		if (document.form1.time_spent.value == 0)
-//		{
-//			alert('Time Spent is an invalid value');
-//			return false;
-//		}
+		if (document.form1.problem.value == 0)
+		{
+			alert('Please state the problem.');
+			return false;
+		}
 //		if (document.form1.time_spent.value >= 1000)
 //		{	
 //					
@@ -366,7 +356,6 @@ if ($special_instructions) {;
 	  <input type= 'hidden' name='sub_name' value='$sub_name'>
 	  <input type= 'hidden' name='sub_email' value='$sub_email'>
 	  <input type= 'hidden' name='status' value='$status'>";
-	  ioiFont("<b>Submit and</b> <p>");
 	  print "<input type='submit' name='button' value='Submit' onClick='formOnClick(\"none\")'>
 	  	<input type='hidden' name='comp_case_num' value='$comp_case_num'>
 		<table width='95%' height='425'  border='1' cellpadding='1' cellspacing='0' bordercolor='#C0C0C0' bgcolor='#909090'>
@@ -464,7 +453,6 @@ if ($special_instructions) {;
 	print "	
 	  </div></td></tr></table>
 	  <p>";
-	  ioiFont("<b>Submit and</b><p>");
 	  print"<input type='submit' name='button' value='Submit' onClick='formOnClick(\"none\")'>
 	</p>
 	  </form>

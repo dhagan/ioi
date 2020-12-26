@@ -50,7 +50,8 @@ bodyAndLoad("menu_focus(document.form1.inputBy,\"$staffEmail\")");
 $sth = $dbh->prepare("select sa_dept,sa_login from staff where sa_login like '$user'");
 $sth->execute();
 ($dept,$user) = $sth->fetchrow_array();
-if ($dept ne "IT")
+#if ($dept ne "IT")
+if (true)
 {
 	if ($newCustomer ne "" or $newCompany ne "")
 	{
@@ -247,7 +248,7 @@ sub activeTickets()
 {
 	$formselect = $_[0];
 	print "<center>Currently Active Tickets for $comp_name</center>";
-	$statement = $dbh->prepare("select case_num,short_desc,submitted_by,assigned_to,time_mod,date_mod,status from problem where prob_comp_link = '$comp_case_num' and status <> 'Closed' and status <> 'Awaiting Feature Request' and status <> 'Awaiting Bug Fix' order by submitted_by");
+	$statement = $dbh->prepare("select case_num,short_desc,submitted_by,assigned_to,time_mod,date_mod,status from problems where prob_comp_link = '$comp_case_num' and status <> 'Closed' and status <> 'Awaiting Feature Request' and status <> 'Awaiting Bug Fix' order by submitted_by");
 	$statement->execute();
 	print "<table width='100%'  border='1' align='center' cellpadding='5' cellspacing='0' bordercolor='#C0C0C0' bgcolor='#909090'>";
 	print "<tr><th><strong>Case Number</th><th>Description</th><th>Assigned To</th><th>Last Modified</th><th>Status</th><th>Submitted By</th><th>Select</th></tr>";

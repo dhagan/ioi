@@ -32,18 +32,15 @@ $dbh-> {'LongReadLen'} = 1000000;
 $cgi = new CGI;
 
 my $mycookie = 'ioidashboard';
-if ( $cgi->cookie($mycookie))
-{
-  # DJH no-op
-  $user = $cgi->cookie($mycookie);
-} else 
-{
-  print "Content-type: text/plain\n\n";
-  print "Can't find cookie $mycookie, you must authenticate FROM IOITicket.php";
-  exit;
-}
 
 $user = getRemoteUser();
+
+if (!param('case_num'))
+{
+  print "Content-type: text/plain\n\n";
+  print "Invalid parameters";
+  exit;
+}
 
 use CGI qw(:standard escapeHTML);
 
