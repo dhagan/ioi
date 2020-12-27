@@ -368,17 +368,11 @@ if ($special_instructions) {;
 	  <input type= 'hidden' name='sub_name' value='$sub_name'>
 	  <input type= 'hidden' name='sub_email' value='$sub_email'>
 	  <input type= 'hidden' name='status' value='$status'>";
-	  print "<input type='submit' name='button' value='Submit' onClick='formOnClick(\"none\")'>
+	  print "
 	  	<input type='hidden' name='comp_case_num' value='$comp_case_num'>
 		<table width='95%' height='425'  border='1' cellpadding='1' cellspacing='0' bordercolor='#C0C0C0' bgcolor='#909090'>
 		  <tr bgcolor='#B0B0B0'>
 			<td colspan='2'><div align='left'><strong>Subject:</strong> $short_desc</div></td>
-		  </tr>
-		  <tr bgcolor='#909090'>
-			<td colspan='2'><div align='left'>Company: $comp_name, Billing/Shipping: $comp_bill_address</div></td>
-		  </tr>
-		  <tr>
-			<td colspan='2'><div align='left'>Customer Information: $sub_name, $sub_phone, $sub_email, 
 		  </tr>
 		  <tr bgcolor='#B0B0B0'>
 			<td width='21%'><div align='left'><strong>Ticket Number:</strong> $case_num </div></td>
@@ -390,9 +384,10 @@ if ($special_instructions) {;
 		  </tr>
 		  <tr bgcolor='#B0B0B0'>
 			<td><div align='left'><strong>Priority:</strong> $priority_type</div></td>
+			<td></td>
 	          </tr>
 		  <tr bgcolor='#B0B0B0'>
-			<td colspan='2'><div align='left'><strong>Problem</strong></div></td>
+			<td colspan='2'><div align='left'><strong>Problem:</strong></div></td>
 		  </tr>
 		  <tr bgcolor='#B0B0B0'>
 			<td colspan='2'><div align='left'>
@@ -405,6 +400,11 @@ if ($special_instructions) {;
 			<!--
 			 <a href='knowledgebase.cgi?short_desc=$link_desc&free_text_query=Yes' target='_new'>Search Knowledgebase</a>
 			-->
+			</div></td>
+		  </tr>
+		  <tr bgcolor='#B0B0B0'>
+			<td colspan='2'><div align='left'><strong>
+				<input type='submit' name='button' value='Update Ticket' onClick='formOnClick(\"none\")'>
 			</div></td>
 		  </tr>
 		</table>
@@ -465,7 +465,7 @@ if ($special_instructions) {;
 	print "	
 	  </div></td></tr></table>
 	  <p>";
-	  print"<input type='submit' name='button' value='Submit' onClick='formOnClick(\"none\")'>
+	  print"<input type='submit' name='button' value='Update Ticket' onClick='formOnClick(\"none\")'>
 	</p>
 	  </form>
 	</div>

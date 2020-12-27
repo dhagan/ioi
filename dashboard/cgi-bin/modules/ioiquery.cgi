@@ -591,7 +591,7 @@ sub getCaseNumber()
 {
 	my $dbh = getDBConnection();	
 	$dbh-> {'LongReadLen'} = 1000000;
-	$statement = "select max(case_num) from problem";
+	$statement = "select max(case_num) from problems";
 	$sth = $dbh->prepare($statement);
 	$sth->execute();
 	$case_num = $sth->fetchrow_array();

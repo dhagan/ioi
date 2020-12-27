@@ -122,11 +122,11 @@ function checkSubmit()
 	document.form1.time_spent.value = '';
 	return false;
 	}
-	if (document.form1.product.value == '')
-	{
-		alert('Please select a product for this ticket');
-		return false;
-	}
+//	if (document.form1.product.value == '')
+//	{
+//		alert('Please select a product for this ticket');
+//		return false;
+//	}
 				
 
 }
@@ -152,7 +152,7 @@ $sth = $dbh->prepare("select comp_bill_address, comp_bill_city,comp_bill_state,c
 $sth->execute();
 ($comp_bill_address,$comp_bill_city,$comp_bill_state,$comp_bill_zip) = $sth->fetchrow_array();
 
-print "<FORM ACTION=\"email2.cgi\" METHOD=\"POST\" ENCTYPE=\"multipart/form-data\" name=\"form1\" onsubmit='return checkSubmit()'>
+print "<FORM ACTION=\"hd-email2.cgi\" METHOD=\"POST\" ENCTYPE=\"multipart/form-data\" name=\"form1\" onsubmit='return checkSubmit()'>
 
 <input type='hidden' name='user' value='$user'>
 <input type='hidden' name='newticket' value='true'>

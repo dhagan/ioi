@@ -88,6 +88,10 @@ if ($allow_submit == 1)
 {
     nonTechCheck($user, $case_num, $subject, $submit_time, $date, $assigned_to);
 	
+### DJH 12/27/2020 
+###  re-purpose this block and more for create and update
+###
+	$status = 'Pending IOI';
 	#If this is a new ticket
 	if ($newTicket eq "true" and $case_num eq "")
 	{	
@@ -95,7 +99,6 @@ if ($allow_submit == 1)
 		$subject = $dbh->quote($subject);
 		$date = $dbh->quote($date);
 		$submit_time = $dbh->quote($submit_time);
-		$status = $dbh->quote($status);
 		$product = $dbh->quote($product);
 		$comp_case_num = $dbh->quote($comp_case_num);
 		$customer = $dbh->quote($customer);
@@ -104,15 +107,15 @@ if ($allow_submit == 1)
 		$priority = $dbh->quote($priority);
 		$bug_ticket_num = $dbh->quote($bug_ticket_num);
 		$statement = "INSERT INTO problems (case_num,status,short_desc,priority_type,assigned_to,time_spent,date_open,date_mod,time_mod,prob_prod_link,prob_comp_link,submitted_by,xinet_ticket_num,bug_ticket_num) values
-		('$case_num',$status,$subject,$priority,$assigned_to,$time_spent,$date,$date,$submit_time,$product,$comp_case_num,$customer,'$xinet_ticket_num',$bug_ticket_num)";
+		('$case_num','$status', $subject,$priority,$assigned_to,$time_spent,$date,$date,$submit_time,$product,$comp_case_num,$customer,'$xinet_ticket_num',$bug_ticket_num)";
 		$sth = $dbh->prepare($statement);
 		$sth->execute();
                 $sth = $dbh->prepare("SELECT id FROM problems WHERE case_num = '$case_num'");
                 $sth->execute();
                 my $problem_id = $sth->fetchrow_array();
                 $description = $dbh->quote($problem);
-                my $description_updated_by = $dbh->quote("$user");
-                my $action = "Updated by $user";
+                my $description_updated_by = $dbh->quote("$sub_name");
+                my $action = "Updated by $sub_name";
                 my $is_customer = false;
                 my $statement = "INSERT INTO `descriptions` (problem_id, description, status, created, description_updated_by, action, is_customer) VALUES ('$problem_id', $description, '$status', NOW(), $description_updated_by, '$action', '$is_customer')";
                 $sth = $dbh->prepare($statement);
@@ -122,7 +125,7 @@ if ($allow_submit == 1)
 	#If an existing ticket
 	} elsif ($case_num ne "") {
 		$subject = $dbh->quote($subject);
-		$statement = "UPDATE problems SET date_mod = '$date', time_mod = '$submit_time', status='Pending IOI' WHERE case_num = '$case_num'";
+		$statement = "UPDATE problems SET date_mod = '$date', time_mod = '$submit_time', status='$status' WHERE case_num = '$case_num'";
                 $sth = $dbh->prepare($statement) or die print $dbh->errstr;
 		$sth->execute() or die print $dbh->errstr;
                 $sth = $dbh->prepare("SELECT id FROM problems WHERE case_num = '$case_num'");
