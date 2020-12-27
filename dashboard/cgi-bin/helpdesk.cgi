@@ -92,24 +92,23 @@ $test = $dbh->prepare($statement);
 $test->execute(); 
 my $modified = $cgi->param('modified');
 ioiFont("<b>Your ticket has been successfully updated</b>") if ($submit eq "yes");
-ioiFont("<p><a href = 'hd-respondTicket.cgi?case_num=$modified&user=$user'>Click Here to Modify Your Recently Updated Ticket</a></p>") if ($modified);
 print "<div style=\"float: right;\">";
-ioiFont ("<input id='submit-ticket' type='button' value='Submit Ticket' onclick=\"window.location='hd-submitTicket.cgi'\"/>&nbsp;&nbsp;");
+ioiFont ("<input id='submit-ticket' type='button' value='Create Ticket' onclick=\"window.location='hd-submitTicket.cgi'\"/>&nbsp;&nbsp;");
 print "<input id='logout' type='button' value='Logout' onclick=\"window.location='hd-logout.cgi'\"/>";
 print "</div>";
 print "<div align ='center'>Active Tickets for $sub_name</div><p>";
 #print "<table border='1' cellpadding ='1' cellspacing='1' width ='90%' bgcolor='#909090' align='center'>
 ioiFont("<a href='helpdesk.cgi'>Back to my Active Tickets</a><p>") if (param('showFeatureTickets') or param('showBugTickets'));
 
- tableHead('90%');
+ tableHead('100%');
  print"
- <th><a href='helpdesk.cgi?order_by=case_num$showTicketsEnding'>Case Number</a></th><th><a href='helpdesk.cgi?order_by=submitted_by$showTicketsEnding'>Submitted By</a></th><th><a href='helpdesk.cgi?order_by=short_desc$showTicketsEnding'>Subject</a></th><th><a href='helpdesk.cgi?order_by=date_mod$showTicketsEnding'>Last Modified</a></th><th><a href='helpdesk.cgi?order_by=status$showTicketsEnding'>Status</a></th><th>Assigned To</th>";
+ <th><a href='helpdesk.cgi?order_by=case_num$showTicketsEnding'>Case Number</a></th></th><th><a href='helpdesk.cgi?order_by=short_desc$showTicketsEnding'>Subject</a></th><th><a href='helpdesk.cgi?order_by=date_mod$showTicketsEnding'>Last Modified</a></th><th><a href='helpdesk.cgi?order_by=status$showTicketsEnding'>Status</a></th><th>Assigned To</th>";
+ @bgcolors=("#ffffff","f8f8f8");
+ $row=0;
  while(($status, $submitted_by, $case_num, $date_mod, $time_mod, $short_desc, $prob_prod_link, $prob_comp_link, $updated_by , $priority, $assigned_to) = $test->fetchrow_array())
  {
 
-	$bgcolor = '#B0B0B0';
-	$short_desc = "<b><font color='blue'>" . $short_desc . "</font></b>" if (lc($updated_by) ne lc($user));
-	
+	$short_desc = "<b>" . $short_desc . "</font></b>" if (lc($updated_by) ne lc($user));
 	$date_mod =~ s/00:00:00//g;
 	$statement = "SELECT sub_name FROM users WHERE sub_login = '$submitted_by'";
 	$customer = $dbh->prepare($statement);
@@ -118,16 +117,19 @@ ioiFont("<a href='helpdesk.cgi'>Back to my Active Tickets</a><p>") if (param('sh
 	$compName = selectValues("SELECT comp_name FROM company WHERE comp_case_num = '$prob_comp_link'");
 	$statement = "SELECT contract_type FROM contract WHERE contract_comp_link = (SELECT sub_comp_link FROM users WHERE sub_login='$submitted_by')";
 	$contract = selectValues($statement);
+	$bgcolor = "";
 	$bgcolor2 = "";
 	$bgcolor3 = "";
-	$bgcolor2 = "#CCCCCC" if ($contract eq "Platinum");
-	$bgcolor2 = "#999933" if ($contract eq "Gold");
-	$bgcolor2 = "#999999" if ($contract eq "Silver");
-	#$bgcolor2 = "#996600" if ($contract eq "Bronze");
-	$bgcolor3 = "red" if ($priority eq "Critical");
-	$bgcolor3 = "909090" if ($priority eq "High");
-	$bgcolor3 = "green" if ($priority eq "Medium");
-	$bgcolor3 = "#0066CC" if ($priority eq "Low");
+#	$bgcolor2 = "#CCCCCC" if ($contract eq "Platinum");
+#	$bgcolor2 = "#999933" if ($contract eq "Gold");
+#	$bgcolor2 = "#999999" if ($contract eq "Silver");
+#	#$bgcolor2 = "#996600" if ($contract eq "Bronze");
+#	$bgcolor3 = "red" if ($priority eq "Critical");
+#	$bgcolor3 = "909090" if ($priority eq "High");
+#	$bgcolor3 = "green" if ($priority eq "Medium");
+#	$bgcolor3 = "#0066CC" if ($priority eq "Low");
+	$bgcolor = $bgcolors[$row %2];
+	$row++;
 	print "<tr bgcolor='$bgcolor'>
 		<td bgcolor = '$bgcolor2'>
 			<form action='hd-respondTicket.cgi' name='form1' method='post'>
@@ -136,14 +138,10 @@ ioiFont("<a href='helpdesk.cgi'>Back to my Active Tickets</a><p>") if (param('sh
 				<input type='submit' value='$case_num' name='Edit' >
 			</form>
 		</td>
-		<td>$sub_name<br /><span style='font-size:small'>$compName</span></td>
 		<td>$short_desc</td>
 		<td>$date_mod $time_mod</td>
 		<td bgcolor='$bgcolor3'>$status</td>
 		<td> $assigned_to</td></tr>";	
  }
  print "</table>";
- ioiFont("The blue subject lines represent tickets that were last updated by someone other than $user");
- ioiFont("<a href='helpdesk.cgi?showBugTickets=yes'>View tickets awaiting bug fix</a><p>");
- ioiFont("<a href='helpdesk.cgi?showFeatureTickets=yes'>View tickets awaiting feature requests");
  print $cgi->end_html;	

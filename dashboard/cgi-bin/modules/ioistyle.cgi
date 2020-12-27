@@ -68,7 +68,7 @@ sub background()
 	print"<style type='text/css'>
 	<!--
 	body {
-	background-color: #C0C0C0;
+	background-color: #FFFFFF;
 	}
 	-->
 	</style>";
@@ -94,7 +94,7 @@ sub tableHead()
 {
 	my $width = $_[0] if ($_[0]);
 	my $options = $_[1];
-	print "<table width='$width'  border='1' align='center' cellpadding='5' cellspacing='0' bordercolor='#C0C0C0' bgcolor='#909090' $options>";
+	print "<table width='$width'  border='1' align='center' cellpadding='5' cellspacing='0' bordercolor='#C0C0C0' bgcolor='#e8e8e8' $options>";
 }
 sub bodyAndLoad()
 {
