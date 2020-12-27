@@ -21,23 +21,56 @@ push(@INC, $REQUIRE_DIR) if $REQUIRE_DIR;
 require "ioistyle.cgi";
 require "ioiquery.cgi";
 $cgi = new CGI;
-$loginString = "?sub_e_mail=$username&sub_email=$password&checkLogin=true";
-($sub_e_mail, $sub_name, $sub_comp_link) = validateUser( 'support@iointegration.com', 'ioi101');
-if ($sub_e_mail) {
-   #print ($sub_e_mail, $sub_name, $sub_comp_link);
+$sub_e_mail=$cgi->param('username');
+$sub_password=$cgi->param('password');
+$invalidate=$cgi->url_param('invalidate');
+($sub_e_mail, $sub_name, $sub_comp_link) = &validateUser( $sub_e_mail, $sub_password);
+if ($sub_e_mail && $sub_name && $sub_comp_link) {
+   $loginString = "?sub_e_mail=$sub_e_mail&sub_name=$sub_name&sub_comp_link=$sub_comp_link";
    print $cgi->redirect("helpdesk.cgi$loginString&redirect=$page");
-} else {
+} elsif ($invalidate)
+{
 print $cgi->header();
+print "Unable to authenticate, please try again.";
+exit;
+} else 
+{
+print $cgi->header();
+print $cgi->param;
 print "
 <html>
 <head>
 <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">
-<title>IOI Dashboard</title>
+<meta name=\"viewport\" content=\"width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;\"/>  
+<title>IOI Tickets</title>
+<link href=\"status.css\" rel=\"stylesheet\" type=\"text/css\">
 </head>
-
 <body>
-Please login!
+<form action=\"hd-login.cgi?invalidate=1\" method=\"post\" name=\"login\" id=\"login\">
+    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" id=\"status\" summary=\"Active tickets.\">
+        <caption align=\"top\"  class=\"login\">
+        Welcome to the IOI Tickets
+        </caption>
+        <tr>
+            <td class=\"login\">Username: </td>
+            <td class=\"login\"><input name=\"username\" type=\"text\" id=\"username\" size=\"20\" maxlength=\"156\"  value=\"\"></td>
+        </tr>
+        <tr>
+            <td class=\"login\">Password: </td>
+            <td class=\"login\"><input name=\"password\" type=\"password\" id=\"password\" size=\"20\" maxlength=\"156\"></td>
+        </tr>
+        <tr>
+            <td  class=\"login\" colspan=\"2\"><input type=\"submit\" name=\"Submit\" value=\"Submit\"></td>
+        </tr>
+        <tr>
+            <td colspan=\"2\" class=\"copyright\"> Copyright &copy; 2021 IO Integration, Inc. All rights reserved.</td>
+        </tr>
+    </table>
+</form>
 </body>
 </html>
+
 ";
+exit;
 }
+

@@ -738,11 +738,12 @@ sub validateUser()
 	my $username = $_[0];
 	my $password = $_[1];
 	my $dbh = getDBConnection();
-        #$sth = $dbh->prepare("select sub_e_mail,sub_name,sub_comp_link from users where sub_login = '$username' and sub_password = '$password'");
-        $sth = $dbh->prepare("select sub_e_mail,sub_name,sub_comp_link from users where sub_login = '$username'");
+        $sth = $dbh->prepare("select sub_e_mail,sub_name,sub_comp_link from users where sub_login = '$username' and sub_password = '$password'");
         #print("select sub_e_mail,sub_name,sub_comp_link from users where sub_login = '$username'");
 	$sth->execute();
+	#return $sth->fetchrow_array();
 	my ($sub_e_mail, $sub_name, $sub_comp_link) = $sth->fetchrow_array();
+	$sth->finish();
 	$dbh->disconnect();
 	return ($sub_e_mail, $sub_name, $sub_comp_link) 
 }
