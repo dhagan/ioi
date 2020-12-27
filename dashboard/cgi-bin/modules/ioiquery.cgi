@@ -36,6 +36,7 @@ sub getDBConnection()
         ### DJH $ENV{MYSQL_UNIX_PORT} = '/tmp/mysql.sock';
 	return	DBI->connect("DBI:mysql:problem_track:localhost",$username,$password, { RaiseError => 1, AutoCommit=>0});
 }
+
 sub getRemoteUser()
 {
 	### return $ENV{REMOTE_USER};
@@ -55,8 +56,38 @@ sub getRemoteUser()
 		exit;
 	}
 	return $user;
+}
+
+sub getHDUser()
+{
+	$cgi = new CGI;
+	my $mycookie = 'ioiHelpDesk';
+	if ( $cgi->cookie($mycookie))
+	{
+		# DJH no-op
+		$user = $cgi->cookie($mycookie);
+	} else
+	{
+		print "Content-type: text/plain\n\n";
+		print "We're sorry, you are not logged in.";
+		exit;
+	}
+	return $user;
+}
+
+sub constructCookie()
+{
+	my $sub_e_mail = $_[0];
+	$cgi = new CGI;
+	my $cookieName = 'ioiHelpDesk';
+	return $cgi->cookie(-name=> $cookieName,
+    -value=> $sub_e_mail,
+    -expires=>'+24h',
+    -path=>'/', 
+    -domain=> '.iointegration.com');
 
 }
+
 sub getQueryCount()
 {
 	my $query = $_[0];

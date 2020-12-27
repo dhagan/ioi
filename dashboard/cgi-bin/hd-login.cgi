@@ -16,18 +16,22 @@
 ################################################################################
 
 use CGI;
+use CGI::Session;
 $REQUIRE_DIR ='modules';
 push(@INC, $REQUIRE_DIR) if $REQUIRE_DIR;
 require "ioistyle.cgi";
 require "ioiquery.cgi";
 $cgi = new CGI;
+$session  = CGI::Session->new($cgi) or die CGI->Session->errstr;
 $sub_e_mail=$cgi->param('username');
 $sub_password=$cgi->param('password');
 $invalidate=$cgi->url_param('invalidate');
 ($sub_e_mail, $sub_name, $sub_comp_link) = &validateUser( $sub_e_mail, $sub_password);
 if ($sub_e_mail && $sub_name && $sub_comp_link) {
    $loginString = "?sub_e_mail=$sub_e_mail&sub_name=$sub_name&sub_comp_link=$sub_comp_link";
-   print $cgi->redirect("helpdesk.cgi$loginString&redirect=$page");
+   $session->param('sub_e_mail', $sub_e_mail);
+   $url = "helpdesk.cgi$loginString&redirect=$page";
+   print $cgi->redirect(-uri => $url);
 } elsif ($invalidate)
 {
 print $cgi->header();
@@ -35,7 +39,7 @@ print "Unable to authenticate, please try again.";
 exit;
 } else 
 {
-print $cgi->header();
+print $session->header();
 print $cgi->param;
 print "
 <html>

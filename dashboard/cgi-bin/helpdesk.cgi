@@ -18,6 +18,7 @@
 ################################################################################
 
 use CGI;
+use CGI::Session;
 use DBI;
 use Time::Format qw(time_format %time %strftime %manip);
 $cgi  = new CGI;
@@ -31,6 +32,8 @@ $user =~ s/IOINTEGRATION\\//g;
 $dbh = getDBConnection();	
 $dbh-> {'LongReadLen'} = 1000000; 
 print $cgi->header();
+my $session  = CGI::Session->new($cgi) or die CGI->Session->errstr;
+$user = $session->param('sub_e_mail');
 print $cgi->start_html(-title=>"Tickets");
 print "<script language='javascript'>
 function changeText(thisField,thisText)
