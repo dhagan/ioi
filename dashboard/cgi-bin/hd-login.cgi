@@ -46,6 +46,8 @@ if ($sub_e_mail && $sub_name && $sub_comp_link) {
 {
    print $cgi->header();
    print "Unable to authenticate, please try again.";
+
+  print "<p><input id='login' type='button' value='Login' onclick=\"window.location='hd-login.cgi'\"/>";
    exit;
 } else 
 {
@@ -64,7 +66,7 @@ if ($sub_e_mail && $sub_name && $sub_comp_link) {
 <form action=\"hd-login.cgi?invalidate=1\" method=\"post\" name=\"login\" id=\"login\">
     <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" id=\"status\" summary=\"Active tickets.\">
         <caption align=\"top\"  class=\"login\">
-        Welcome to the IOI Tickets
+        Temporaray Ticket Site
         </caption>
         <tr>
             <td class=\"login\">Username: </td>

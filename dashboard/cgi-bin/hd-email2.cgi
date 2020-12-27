@@ -122,7 +122,7 @@ if ($allow_submit == 1)
 	#If an existing ticket
 	} elsif ($case_num ne "") {
 		$subject = $dbh->quote($subject);
-		$statement = "UPDATE problems SET date_mod = '$date', time_mod = '$submit_time' WHERE case_num = '$case_num'";
+		$statement = "UPDATE problems SET date_mod = '$date', time_mod = '$submit_time', status='Pending IOI' WHERE case_num = '$case_num'";
                 $sth = $dbh->prepare($statement) or die print $dbh->errstr;
 		$sth->execute() or die print $dbh->errstr;
                 $sth = $dbh->prepare("SELECT id FROM problems WHERE case_num = '$case_num'");
@@ -203,8 +203,8 @@ if ( $supplier eq ""){
 if ($assigned_to eq "nobody" or $email_action eq "Submit")
 {
 	#print "<center><p><a href = 'respondTicket.cgi?case_num=$case_num&user=$user'>Click Here to Modify Your Recently Updated Ticket</a></p></center>";
-        ### DJH print $cgi->redirect("/cgi-bin/helpdesk.cgi?modified=$case_num");
-        print $cgi->redirect("/dashboard/thankYou.cgi?modified=$case_num");
+        print $cgi->redirect("helpdesk.cgi?modified=$case_num");
+        ### DJH print $cgi->redirect("/dashboard/thankYou.cgi?modified=$case_num");
 }
 else 
 {

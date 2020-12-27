@@ -23,11 +23,22 @@ require "ioiquery.cgi";
 #techSubmit
 use DBI;
 use CGI;
+use CGI::Carp qw(fatalsToBrowser);
 my $dbh = getDBConnection();
 $cgi = new CGI;
 $sub_login = $cgi->param('customer');
-### DJH $user = $cgi->param('user');
-$user = getRemoteUser();
+
+## DJH $user = $cgi->param('user');
+#$user = getRemoteUser();
+
+($sub_e_mail, $sub_name, $sub_comp_link) = &getUserSession();
+if (!$sub_e_mail || !$sub_name || !$sub_comp_link) {
+   print $cgi->header();
+   print "You appear to be logged out, please login";
+   print "<input id='login' type='button' value='Login' onclick=\"window.location='hd-login.cgi'\"/>";
+   exit;
+}
+
 
 print $cgi->header();
 print "<html><head><title>Ticket Submit</title>
@@ -127,9 +138,13 @@ print "<style type='text/css'>
 body {
 	background-color: #C0C0C0;
 }
-
 -->
-</style>";
+</style>
+<div style=\"float: right;\">
+<input id='helpdesk' type='button' value='Active Tickets' onclick=\"window.location='helpdesk.cgi'\"/>&nbsp;&nbsp;
+<input id='logout' type='button' value='Logout' onclick=\"window.location='hd-logout.cgi'\"/>
+</div>
+";
 $sth = $dbh->prepare("select sub_phone,sub_e_mail,sub_name,sub_comp_link from users where sub_login = '$sub_login'");
 $sth->execute();
 ($phone,$email,$name,$comp_case_num) = $sth->fetchrow_array();

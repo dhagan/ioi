@@ -353,6 +353,12 @@ if ($special_instructions) {;
 	}
 	-->
 	</style>
+
+<div style=\"float: right;\">
+<input id='helpdesk' type='button' value='Active Tickets' onclick=\"window.location='helpdesk.cgi'\"/>&nbsp;&nbsp;
+<input id='logout' type='button' value='Logout' onclick=\"window.location='hd-logout.cgi'\"/>
+</div>
+
 	<div align='left'>
 	<FORM NAME ='form1' ACTION=\"hd-email2.cgi\" METHOD=\"POST\" ENCTYPE=\"multipart/form-data\" onSubmit= 'return submitCheck()'>
 	  <input type = 'hidden' name='user' value='$user'>

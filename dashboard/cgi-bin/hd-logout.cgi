@@ -29,9 +29,10 @@ print "
 <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">
 <title>IOI Dashboard</title>
 </head>
-
 <body>
 Logout success!
+<p>
+<input id='login' type='button' value='Login' onclick=\"window.location='hd-login.cgi'\"/>
 </body>
 </html>
 ";
