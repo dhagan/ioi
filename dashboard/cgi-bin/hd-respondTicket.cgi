@@ -33,7 +33,13 @@ $cgi = new CGI;
 
 my $mycookie = 'ioidashboard';
 
-$user = getRemoteUser();
+($sub_e_mail, $sub_name, $sub_comp_link) = &getUserSession();
+if (!$sub_e_mail || !$sub_name || !$sub_comp_link) {
+   print $cgi->header();
+   print "You appear to be logged out, please login";
+   print "<input id='login' type='button' value='Login' onclick=\"window.location='hd-login.cgi'\"/>";
+   exit;
+}
 
 use CGI qw(:standard escapeHTML);
 
@@ -623,7 +629,7 @@ sub getTicketInfo()
 	$newUserViewTicket = $_[0];
 	$case_num= $cgi->param('case_num');
 	### DJH 10/26/2010 $user = $cgi->param('user');
-	$user = getRemoteUser();
+	### DJH 12/26/2020 $user = getRemoteUser();
 	$mistake_problem = $cgi->param('problem');
 	$staffmember = $cgi->param('staffmember');
 	$confirmUpdate= $cgi->param('confirmUpdate');

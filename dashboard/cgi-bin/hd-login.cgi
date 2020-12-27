@@ -2,7 +2,7 @@
 
 ################################################################################
 #
-#       File Name: login.cgi
+#       File Name: hd-login.cgi
 #
 #       Purpose: This file is used for 
 #
@@ -23,6 +23,7 @@ push(@INC, $REQUIRE_DIR) if $REQUIRE_DIR;
 require "ioistyle.cgi";
 require "ioiquery.cgi";
 $cgi = new CGI;
+
 ($sub_e_mail, $sub_name, $sub_comp_link) = &getUserSession();
 if ($sub_e_mail && $sub_name && $sub_comp_link) {
    $loginString = "?sub_e_mail=$sub_e_mail&sub_name=$sub_name&sub_comp_link=$sub_comp_link";

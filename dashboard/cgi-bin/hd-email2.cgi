@@ -43,12 +43,7 @@ $dbh->{'LongReadLen'} = 1000000;
 $case_num = $cgi->param('case_num');
 $email_action = $cgi->param('email_action');
 $link = $cgi->param('link');
-### DJH $user = $cgi->param('user');
-$user = getRemoteUser();
-# DJH 12/25/2020
-$sub_name = $cgi->param('sub_name');
-$sub_email = $cgi->param('sub_email');
-# end DJH 12/25/2020
+$user = $cgi->param('user');
 $assigned_to = $cgi->param('assigned_to');
 $status = $cgi->param('status');
 $priority = $cgi->param('priority');
@@ -68,6 +63,16 @@ $attachment3 = $cgi->param('attachment3');
 $submit_time = $time{"hh:mm:ss"};
 $date = time_format('yyyy/mm/dd');
 $rows = 0;
+
+
+($sub_e_mail, $sub_name, $sub_comp_link) = &getUserSession();
+if (!$sub_e_mail || !$sub_name || !$sub_comp_link) {
+   print $cgi->header();
+   print "You appear to be logged out, please login";
+   print "<input id='login' type='button' value='Login' onclick=\"window.location='hd-login.cgi'\"/>";
+   exit;
+}
+
 
 #######################################Submit Ticket###########################################
 $sth = $dbh->prepare("SELECT allow_submit,submitted_by FROM problems WHERE case_num = '$case_num'");
@@ -124,7 +129,7 @@ if ($allow_submit == 1)
                 $sth->execute();
                 my $problem_id = $sth->fetchrow_array();
                 $description = $dbh->quote($problem);
-                my $description_updated_by = $sub_name . "<" . $sub_email . ">";
+                my $description_updated_by = $sub_name . "<" . $sub_e_mail . ">";
                 my $action = "Updated by $sub_name";
                 my $is_customer = true;
                 my $statement = "INSERT INTO `descriptions` (problem_id, description, status, created, description_updated_by, action, is_customer) VALUES ('$problem_id', $description, '$status', NOW(), '$description_updated_by', '$action', '$is_customer')";

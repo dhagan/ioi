@@ -17,68 +17,31 @@
 #       07/09/2007      B. Scarborough  Modified to display company name on Active Tickets page
 ################################################################################
 
-use CGI;
+use CGI qw(:standard escapeHTML);
 use CGI::Session;
 use DBI;
 use Time::Format qw(time_format %time %strftime %manip);
 $cgi  = new CGI;
-use CGI qw(:standard escapeHTML);
 $REQUIRE_DIR ='modules';
 push(@INC, $REQUIRE_DIR) if $REQUIRE_DIR;
 require "ioistyle.cgi";
 require "ioiquery.cgi";
-$user = "Josh Dunne XXXX"; #$ENV{"REMOTE_USER"};
-$user =~ s/IOINTEGRATION\\//g;
+
+($sub_e_mail, $sub_name, $sub_comp_link) = &getUserSession();
+if (!$sub_e_mail || !$sub_name || !$sub_comp_link) {
+   print $cgi->header();
+   print "You appear to be logged out, please login";
+   print "<input id='login' type='button' value='Login' onclick=\"window.location='hd-login.cgi'\"/>";
+   exit;
+}
+
+
+$user=$sub_e_mail;
 $dbh = getDBConnection();	
 $dbh-> {'LongReadLen'} = 1000000; 
 print $cgi->header();
-my $session  = CGI::Session->new($cgi) or die CGI->Session->errstr;
-$user = $session->param('sub_e_mail');
 print $cgi->start_html(-title=>"Tickets");
-print "<script language='javascript'>
-function changeText(thisField,thisText)
-{
-	//alert(thisField + ',' + thisText);
-	//setTimeout(thisField.value = thisText,'1000000');
-	
-}
-function confirmDelete(caseNum)
-{
-	if (confirm(\"Are you sure you want to delete ticket # \" + caseNum))
-	{
-		location.replace('/cgi-bin/deleteTickets.cgi?selrow=' + caseNum);
-	}
-}
-function confirmClose(caseNum, closeType)
-{
-        if(confirm('Are you sure you want to close ticket # ' + caseNum))
-        {
-                window.location = 'helpdesk.cgi?closeTicket=' + closeType + '&case_num=' + caseNum;
-        }
-}
-function selectAction(action, caseNum)
-{
-	switch(action)
-	{
-		case \"change\":
-			window.location = \"changeContact.cgi?selrow=\" + caseNum;
-			break;
-		case \"append\":
-			window.location = \"appendTicket.cgi?selrow=\" + caseNum;
-			break;
-		case \"close\":
-			confirmClose(caseNum, 'yes');
-			break;
-		case \"closeNoResp\":
-			confirmClose(caseNum, 'noResponse');
-			break;
-		case \"delete\":
-			confirmDelete(caseNum);
-			break;
-		default:
-			break;
-	}
-}
+print "
 </script>
 <style type='text/css'>
 <!--
@@ -119,10 +82,10 @@ $order_by = $cgi->param('order_by');
 $order_by = 'case_num' if ($order_by eq "");
 autoRefresh();
 background();
-$statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type, assigned_to FROM problems WHERE submitted_by like '%theapsgroup.com' AND status <> 'Closed' AND status <> 'Awaiting Bug Fix' AND status <> 'Awaiting Feature Request' ORDER BY " . $order_by;
-$statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type, assigned_to FROM problems WHERE submitted_by like '%theapsgroup.com' ORDER BY " . $order_by;
-$statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type, assigned_to FROM problems WHERE submitted_by like '%theapsgroup.com' AND status = 'Awaiting Bug Fix' ORDER BY " . $order_by if (param('showBugTickets'));
-$statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type, assigned_to FROM problems WHERE submitted_by like '%theapsgroup.com' AND status = 'Awaiting Feature Request' ORDER BY " . $order_by if (param('showFeatureTickets'));
+$statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type, assigned_to FROM problems WHERE submitted_by like '$user' AND status <> 'Closed' AND status <> 'Awaiting Bug Fix' AND status <> 'Awaiting Feature Request' ORDER BY " . $order_by;
+$statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type, assigned_to FROM problems WHERE submitted_by like '$user' ORDER BY " . $order_by;
+$statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type, assigned_to FROM problems WHERE submitted_by like '$user' AND status = 'Awaiting Bug Fix' ORDER BY " . $order_by if (param('showBugTickets'));
+$statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type, assigned_to FROM problems WHERE submitted_by like '$user' AND status = 'Awaiting Feature Request' ORDER BY " . $order_by if (param('showFeatureTickets'));
 $showTicketsEnding = "&showBugTickets=yes" if (param('showBugTickets'));
 $showTicketsEnding = "&showFeatureTickets=yes" if (param('showFeatureTickets'));
 $test = $dbh->prepare($statement);
@@ -134,7 +97,7 @@ print "<div style=\"float: right;\">";
 ioiFont ("<input id='submit-ticket' type='button' value='Submit Ticket' onclick=\"window.location='hd-submitTicket.cgi'\"/>&nbsp;&nbsp;");
 print "<input id='logout' type='button' value='Logout' onclick=\"window.location='hd-logout.cgi'\"/>";
 print "</div>";
-print "<div align ='center'>Active Tickets for $user</div><p>";
+print "<div align ='center'>Active Tickets for $sub_name</div><p>";
 #print "<table border='1' cellpadding ='1' cellspacing='1' width ='90%' bgcolor='#909090' align='center'>
 ioiFont("<a href='helpdesk.cgi'>Back to my Active Tickets</a><p>") if (param('showFeatureTickets') or param('showBugTickets'));
 
