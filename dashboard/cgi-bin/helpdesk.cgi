@@ -131,7 +131,7 @@ my $modified = $cgi->param('modified');
 ioiFont("<b>Your ticket has been successfully updated</b>") if ($submit eq "yes");
 ioiFont("<p><a href = 'hd-respondTicket.cgi?case_num=$modified&user=$user'>Click Here to Modify Your Recently Updated Ticket</a></p>") if ($modified);
 print "<div style=\"float: right;\">";
-ioiFont ("<input id='submit-ticket' type='button' value='Submit Ticket' onclick=\"window.location='hd-submit-ticket.cgi'\"/>&nbsp;&nbsp;");
+ioiFont ("<input id='submit-ticket' type='button' value='Submit Ticket' onclick=\"window.location='hd-submitTicket.cgi'\"/>&nbsp;&nbsp;");
 print "<input id='logout' type='button' value='Logout' onclick=\"window.location='hd-logout.cgi'\"/>";
 print "</div>";
 print "<div align ='center'>Active Tickets for $user</div><p>";

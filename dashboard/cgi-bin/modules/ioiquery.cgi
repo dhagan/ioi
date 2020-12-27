@@ -24,6 +24,7 @@
 
 use DBI;
 use CGI qw(:standard escapeHTML);
+use CGI::Session;
 use CGI::Carp qw(fatalsToBrowser);
 use Time::Format qw(time_format %time %strftime %manip);
 use MIME::Lite;
@@ -39,8 +40,6 @@ sub getDBConnection()
 
 sub getRemoteUser()
 {
-	### return $ENV{REMOTE_USER};
-
 	### DJH 10/20/2010
 	$cgi = new CGI;
 
@@ -58,33 +57,26 @@ sub getRemoteUser()
 	return $user;
 }
 
-sub getHDUser()
+sub getUserSession()
 {
 	$cgi = new CGI;
-	my $mycookie = 'ioiHelpDesk';
-	if ( $cgi->cookie($mycookie))
-	{
-		# DJH no-op
-		$user = $cgi->cookie($mycookie);
-	} else
-	{
-		print "Content-type: text/plain\n\n";
-		print "We're sorry, you are not logged in.";
-		exit;
-	}
-	return $user;
+	$session  = CGI::Session->new($cgi) or die CGI->Session->errstr;
+	my $sub_e_mail = $session->param('sub_e_mail');
+	my $sub_name = $session->param('sub_name');
+	my $sub_comp_link = $session->param('sub_comp_link');
+	return ($sub_e_mail, $sub_name, $sub_comp_link);
 }
 
-sub constructCookie()
+sub setUserSession()
 {
-	my $sub_e_mail = $_[0];
 	$cgi = new CGI;
-	my $cookieName = 'ioiHelpDesk';
-	return $cgi->cookie(-name=> $cookieName,
-    -value=> $sub_e_mail,
-    -expires=>'+24h',
-    -path=>'/', 
-    -domain=> '.iointegration.com');
+	$session  = CGI::Session->new($cgi) or die CGI->Session->errstr;
+	my $sub_e_mail = $_[0];
+	my $sub_name = $_[1];
+	my $sub_comp_link = $_[2];
+	$session->param('sub_e_mail', $sub_e_mail);
+	$session->param('sub_name', $sub_name);
+	$session->param('sub_comp_link', $sub_name);
 
 }
 
