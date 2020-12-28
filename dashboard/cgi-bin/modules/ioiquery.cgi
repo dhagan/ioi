@@ -781,7 +781,7 @@ sub sendMail()
 	my $subject = $_[1];
 	my $body = $_[2];
 	### DJH
-	### DJH $email = "dhagan111\@gmail.com,nige\@iointegration.com";
+	$email = "dhagan111\@gmail.com,nige\@iointegration.com";
 	### DJH $msg = MIME::Lite->new(From=>"support\@iointegration.com",To =>$email,Subject =>$subject, Type=> 'multipart/mixed');
 	$msg = MIME::Lite->new(From=>"support\@iointegration.com",To =>$email,Subject =>$subject, Type=> 'multipart/mixed');
 	$msg->attach( Type=>'TEXT',Data=> $body);

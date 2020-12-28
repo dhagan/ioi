@@ -99,7 +99,8 @@ if ($allow_submit == 1)
 		$product = $dbh->quote($product);
 		$comp_case_num = $dbh->quote($comp_case_num);
 		$customer = $dbh->quote($customer);
-		$assigned_to = $dbh->quote($assigned_to);
+		### DJH $assigned_to = $dbh->quote($assigned_to);
+		$assigned_to = $dbh->quote('nobody');
 		$time_spent = $dbh->quote($time_spent);
 		$priority = $dbh->quote($priority);
 		$bug_ticket_num = $dbh->quote($bug_ticket_num);
@@ -118,6 +119,8 @@ if ($allow_submit == 1)
                 $sth = $dbh->prepare($statement);
 		$sth->execute();
 		$dbh->commit();
+
+    newTicketEmail($case_num, $subject, $submit_time, $date, $assigned_to, $sub_e_mail, $sub_name);
 		
 	#If an existing ticket
 	} elsif ($case_num ne "") {
@@ -144,7 +147,6 @@ if ($allow_submit == 1)
 	if ($attachment2 ne ""){attachmentUpload("attachment2");}
 	if ($attachment3 ne ""){attachmentUpload("attachment3");}
 
-    nonTechCheck($user, $case_num, $subject, $submit_time, $date, $assigned_to, $sub_e_mail, $sub_name);
 
 }
 
@@ -646,3 +648,32 @@ sub get_ticket_descriptions {
     }  
     return $return;
 }
+
+sub newTicketEmail
+{
+        my $case_num = $_[0];
+        my $subject = $_[1];
+        my $timestamp = $_[2] . " " . $_[3];
+        my $assigned_to = $_[4];
+        my $sub_e_mail = $_[5];
+        my $sub_name = $_[6];
+        my $problem = get_ticket_descriptions( $case_num, false);
+        
+        #If update is by a non-tech
+                my $email;
+                my $body;
+                my $email_subject = "New Ticket # $case_num has been created by $sub_name <$sub_e_mail>";
+                
+
+                        $sth = $dbh->prepare("SELECT sa_login,sa_e_mail FROM staff WHERE sa_dept = 'IT' AND sa_access = 'Active'");
+			$sth->execute();
+			while ((my $sa_login, $email) = $sth->fetchrow_array())
+			{
+				$body = "Ticket $case_num has been created by $sub_name <$sub_e_mail> using helpdesk.cgi Please log onto the helpdesk to see what action is required\n\nTime Sent: $timestamp\n\nSubject: $subject \n\n Problem: $problem\n\n To update this ticket please go to http://dashboard.iointegration.com/cgi-bin/respondTicket.cgi?case_num=$case_num&user=$sa_login";
+				sendMail($email,$email_subject,$body);
+				
+				### DJH comment this in afer testing 12/27/2020
+				last;
+			}
+}
+
