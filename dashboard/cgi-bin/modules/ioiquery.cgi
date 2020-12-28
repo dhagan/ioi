@@ -76,8 +76,7 @@ sub setUserSession()
 	my $sub_comp_link = $_[2];
 	$session->param('sub_e_mail', $sub_e_mail);
 	$session->param('sub_name', $sub_name);
-	$session->param('sub_comp_link', $sub_name);
-
+	$session->param('sub_comp_link', $sub_comp_link);
 }
 
 sub getQueryCount()
@@ -761,7 +760,7 @@ sub validateUser()
 	my $username = $_[0];
 	my $password = $_[1];
 	my $dbh = getDBConnection();
-        $sth = $dbh->prepare("select sub_e_mail,sub_name,sub_comp_link from users where sub_login = '$username' and sub_password = '$password'");
+        $sth = $dbh->prepare("select sub_e_mail,sub_name, sub_comp_link from users where sub_login = '$username' and sub_password = '$password'");
         #print("select sub_e_mail,sub_name,sub_comp_link from users where sub_login = '$username'");
 	$sth->execute();
 	#return $sth->fetchrow_array();
@@ -788,7 +787,7 @@ sub sendMail()
 	$msg->attach( Type=>'TEXT',Data=> $body);
 	$msg->add("Return Path", "support\@iointegration.com");
 	$msg->add("Reply-To","support\@iointegration.com");
-	$msg->send_by_smtp("mail.iointegration.com","support","ioimail");
+	$msg->send_by_smtp('localhost','sup_dev@iointegration.com', 'SupMail.12.21.20');
 }
 
 # Function: sendMailWithAttachment
@@ -833,7 +832,7 @@ sub sendMailWithAttachment()
 	$msg->add("Reply-To", $from);
 	### DJH (my $email_host, my $email_user, my $email_pass) = getEmailParameters();
 	### DJH $msg->send_by_smtp($email_host, $email_user, $email_pass);
-	$msg->send_by_smtp("mail.iointegration.com","support","ioimail");
+	$msg->send_by_smtp('localhost','sup_dev@iointegration.com', 'SupMail.12.21.20');
 }
 
 # Function: checkTechStatus

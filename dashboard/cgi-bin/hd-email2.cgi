@@ -615,7 +615,7 @@ sub nonTechCheck
                         $sth->execute();
                         ($email) = $sth->fetchrow_array();
                         $body = "Ticket $case_num has been updated by $sub_name <$sub_e_mail>. Please log onto the helpdesk to see what action is required\n\nTime Sent: $timestamp\n\nSubject: $subject \n\n Problem: $problem\n\n To update this ticket please go to http://dashboard.iointegration.com/cgi-bin/respondTicket.cgi?case_num=$case_num&user=$assigned_to";
-			### DJH 12/27/2020 sendMail($email,$email_subject,$body);
+			sendMail($email,$email_subject,$body);
                 } else {
                         $sth = $dbh->prepare("SELECT sa_login,sa_e_mail FROM staff WHERE sa_dept = 'IT' AND sa_access = 'Active'");
 			$sth->execute();
@@ -623,7 +623,7 @@ sub nonTechCheck
 			{
 				$body = "This ticket is assigned to $assigned_to, who is unavailable right now. Please determine if this ticket requires attention.\n\n" .
                                         "Ticket $case_num has been updated by $sub_name <$sub_e_mail>. Please log onto the helpdesk to see what action is required\n\nTime Sent: $timestamp\n\nSubject: $subject \n\n Problem: $problem\n\n To update this ticket please go to http://dashboard.iointegration.com/cgi-bin/respondTicket.cgi?case_num=$case_num&user=$sa_login";
-				### DJH 12/27/2020 sendMail($email,$email_subject,$body);
+				sendMail($email,$email_subject,$body);
 			}
                 }
 }

@@ -37,7 +37,7 @@ $sub_password=$cgi->param('password');
 $invalidate=$cgi->url_param('invalidate');
 ($sub_e_mail, $sub_name, $sub_comp_link) = &validateUser( $sub_e_mail, $sub_password);
 if ($sub_e_mail && $sub_name && $sub_comp_link) {
-   setUserSession($sub_e_mail, $sub_name, $sub_com_link);
+   setUserSession($sub_e_mail, $sub_name, $sub_comp_link);
    $loginString = "?sub_e_mail=$sub_e_mail&sub_name=$sub_name&sub_comp_link=$sub_comp_link";
    $url = "helpdesk.cgi$loginString&redirect=$page";
    print $cgi->redirect(-uri => $url);
@@ -66,7 +66,7 @@ if ($sub_e_mail && $sub_name && $sub_comp_link) {
 <form action=\"hd-login.cgi?invalidate=1\" method=\"post\" name=\"login\" id=\"login\">
     <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" id=\"status\" summary=\"Active tickets.\">
         <caption align=\"top\"  class=\"login\">
-        Temporaray Ticket Site
+        Temporary Ticket Site
         </caption>
         <tr>
             <td class=\"login\">Username: </td>
