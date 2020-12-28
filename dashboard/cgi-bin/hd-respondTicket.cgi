@@ -210,7 +210,7 @@ sub respondTicket()
 	<meta name=\"viewport\" content=\"width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;\"/>
 
 	<head>
-	<title>Assign and Update</title>
+	<title>Ticket Update</title>
 	<style type='text/css'>
 	<!--
 	body {
@@ -349,14 +349,15 @@ if ($special_instructions) {;
 	<style type='text/css'>
 	<!--
 	body {
-		background-color: #C0C0C0; width: auto;
+		background-color: #ffffff; width: auto; margin: 25px;
 	}
 	-->
 	</style>
 
-<div style=\"float: right;\">
+<div style=\"float: right;\" width='100px'>
 <input id='helpdesk' type='button' value='Active Tickets' onclick=\"window.location='helpdesk.cgi'\"/>&nbsp;&nbsp;
 <input id='logout' type='button' value='Logout' onclick=\"window.location='hd-logout.cgi'\"/>
+<p>
 </div>
 
 	<div align='left'>
@@ -373,26 +374,26 @@ if ($special_instructions) {;
 	  <input type= 'hidden' name='assigned_to' value='$assigned_to'>";
 	  print "
 	  	<input type='hidden' name='comp_case_num' value='$comp_case_num'>
-		<table width='95%' height='425'  border='1' cellpadding='1' cellspacing='0' bordercolor='#C0C0C0' bgcolor='#909090'>
-		  <tr bgcolor='#B0B0B0'>
+		<table width='100%' height='425'  border='1' cellpadding='1' cellspacing='0' bordercolor='#C0C0C0' bgcolor='#f5f5f5'>
+                  <tr>
 			<td colspan='2'><div align='left'><strong>Subject:</strong> $short_desc</div></td>
 		  </tr>
-		  <tr bgcolor='#B0B0B0'>
+                  <tr>
 			<td width='21%'><div align='left'><strong>Ticket Number:</strong> $case_num </div></td>
 			<td width='31%'><div align='left'><strong>Date Open: </strong> $date_open</div></td>
 	          </tr>
-		  <tr bgcolor='#B0B0B0'>
+                  <tr>
 			<td width='22%'><div align='left'><strong>Product:</strong> $prod_name</div></td>
 			<td width='26%'><div align='left'><strong>Status:</strong> $status</div></td>
 		  </tr>
-		  <tr bgcolor='#B0B0B0'>
+                  <tr>
 			<td><div align='left'><strong>Priority:</strong> $priority_type</div></td>
 			<td></td>
 	          </tr>
-		  <tr bgcolor='#B0B0B0'>
+                  <tr>
 			<td colspan='2'><div align='left'><strong>Problem:</strong></div></td>
 		  </tr>
-		  <tr bgcolor='#B0B0B0'>
+                  <tr>
 			<td colspan='2'><div align='left'>
 			  <textarea name='problem' rows='16' style='width: 100%'>$mistake_problem"; 
 	
@@ -405,14 +406,14 @@ if ($special_instructions) {;
 			-->
 			</div></td>
 		  </tr>
-		  <tr bgcolor='#B0B0B0'>
+                  <tr>
 			<td colspan='2'><div align='left'><strong>
 				<input type='submit' name='button' value='Update Ticket' onClick='formOnClick(\"none\")'>
 			</div></td>
 		  </tr>
 		</table>
 		
-	  <table width='95%'  border='1' cellpadding='0' cellspacing='0' bordercolor='#C0C0C0' bgcolor='#909090'>
+	  <table width='100%'  border='1' cellpadding='0' cellspacing='0' bordercolor='#C0C0C0' bgcolor='#f5f5f5'>
 		<tr>
 		  <td width='23%'><div align='left'>Activity</div></td>
 		  <td width='77%'><div align='left'>
@@ -421,14 +422,14 @@ if ($special_instructions) {;
 		</tr>";
 		splitProblem(param('order'));
 		print"
-		<tr bgcolor='#B0B0B0'>
+		<tr bgcolor='#f5f5f5'>
 		  <td>&nbsp;</td>
 		  <td>&nbsp;</td>
 		</tr>
 	  </table>
-	  <table width='95%'  border='1' cellpadding='0' bordercolor='#C0C0C0' bgcolor='#B0B0B0'>
+	  <table width='100%'  border='1' cellpadding='0' bordercolor='#C0C0C0' bgcolor='#f5f5f5'>
 		<tr>
-		  <td bgcolor='#909090'><div align='left'>Attachments</div></td>
+		  <td bgcolor='#f5f5f5'><div align='left'>Attachments</div></td>
 		</tr>
 		<tr>
 		  <td><div align='left'>
@@ -705,7 +706,7 @@ sub splitProblem
         while ((my $description, my $description_updated_by, my $status, my $action, my $created) = $sth->fetchrow_array())
         {
             print"
-            <tr bgcolor='#B0B0B0'>
+	    <tr>
               <td><p>Who: $description_updated_by</p>
               <p>When: $created</p>
               <p>Action: $action</p>

@@ -136,7 +136,7 @@ function checkSubmit()
 print "<style type='text/css'>
 <!--
 body {
-	background-color: #ffffff;
+	background-color: #ffffff; margin: 25px;
 }
 -->
 </style>
@@ -151,7 +151,7 @@ body {
 <input type='hidden' name='comp_case_num' value='$sub_comp_link'>
 <div align=\"center\">
   <p class=\"style1\"><font color='#808080'>Create Ticket for $sub_name</font></p>
-  <table width=\"90%\"  border=\"1\" cellpadding=\"0\" cellspacing=\"0\" bordercolor=\"#C0C0C0\" bgcolor=\"#f5f5f5\">
+  <table width=\"100%\"  border=\"1\" cellpadding=\"0\" cellspacing=\"0\" bordercolor=\"#C0C0C0\" bgcolor=\"#f5f5f5\">
     <tr>
       <td><span class=\"style3\">Product: <select name=\"product\" id=\"product\">
         <option value=\"\"></option>";

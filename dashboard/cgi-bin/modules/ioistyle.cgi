@@ -68,7 +68,7 @@ sub background()
 	print"<style type='text/css'>
 	<!--
 	body {
-	background-color: #FFFFFF;
+	background-color: #FFFFFF; margin: 25px;
 	}
 	-->
 	</style>";

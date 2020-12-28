@@ -62,6 +62,17 @@ if ($sub_e_mail && $sub_name && $sub_comp_link) {
 <title>IOI Tickets</title>
 <link href=\"status.css\" rel=\"stylesheet\" type=\"text/css\">
 </head>
+   <style type='text/css'>
+        <!--
+        body {
+                background-color: #ffffff; width: auto; margin: 25px;
+        }
+form {
+  text-align: center;
+}
+        -->
+        </style>
+
 <body>
 <form action=\"hd-login.cgi?invalidate=1\" method=\"post\" name=\"login\" id=\"login\">
     <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" id=\"status\" summary=\"Active tickets.\">
