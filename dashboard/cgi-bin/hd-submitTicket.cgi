@@ -81,20 +81,20 @@ function checkSubmit()
 {
 	
 
-	if (document.form1.assigned_to.value != '$user')
-	{
-		var checkAssign = confirm('Are you sure you want to assign this to someone other than yourself ($user)');
-		if (checkAssign == true)
-		{
-		}
-		else
-		{
-			menu_focus(document.form1.assigned_to,'$user');
-			return false;
-		}
-	}
+//	if (document.form1.assigned_to.value != '$user')
+//	{
+//		var checkAssign = confirm('Are you sure you want to assign this to someone other than yourself ($user)');
+//		if (checkAssign == true)
+//		{
+//		}
+//		else
+//		{
+//			menu_focus(document.form1.assigned_to,'$user');
+//			return false;
+//		}
+//	}
 	
-	if (document.form1.subject.value == '')
+	if (document.form1.short_desc.value == '')
 	{
 		alert('Please enter a short description for this ticket');
 		return false;
@@ -102,31 +102,33 @@ function checkSubmit()
 		
 	if (document.form1.problem.value == '')
 	{
-		alert('Please enter a problem for this ticekt');
+		alert('Please enter a problem for this ticket');
 		return false;
 	}
-	if (document.form1.time_spent.value == 0)
-	{
-		alert('Time Spent is an invalid value');
-		return false;
-	}
+//	if (document.form1.time_spent.value == 0)
+//	{
+//		alert('Time Spent is an invalid value');
+//		return false;
+//	}
 
-	if (document.form1.time_spent.value >= 1000)
-	{	
-				
-	var checkOver = confirm('This time spent value is too high, if this was meant to be the vendor ticket number click yes');
-	if (checkOver == true)
-	{
-	document.form1.xinet_ticket_num.value = document.form1.time_spent.value;
-	}
-	document.form1.time_spent.value = '';
-	return false;
-	}
+//	if (document.form1.time_spent.value >= 1000)
+//	{	
+//				
+////	var checkOver = confirm('This time spent value is too high, if this was meant to be the vendor ticket number click yes');
+//	if (checkOver == true)
+//	{
+//	document.form1.xinet_ticket_num.value = document.form1.time_spent.value;
+//	}
+//	document.form1.time_spent.value = '';
+//	return false;
+//	}
 //	if (document.form1.product.value == '')
 //	{
 //		alert('Please select a product for this ticket');
 //		return false;
 //	}
+
+return true;
 				
 
 }
@@ -144,7 +146,7 @@ body {
 <input id='helpdesk' type='button' value='Active Tickets' onclick=\"window.location='helpdesk.cgi'\"/>&nbsp;&nbsp;
 <input id='logout' type='button' value='Logout' onclick=\"window.location='hd-logout.cgi'\"/>
 </div>
-<FORM ACTION=\"hd-email2.cgi\" METHOD=\"POST\" ENCTYPE=\"multipart/form-data\" name=\"form1\" onsubmit='return checkSubmit()'>
+<FORM ACTION=\"hd-email2.cgi\" METHOD=\"POST\" ENCTYPE=\"multipart/form-data\" name=\"form1\" onSubmit='return checkSubmit()'>
 <input type='hidden' name='newticket' value='true'>
 <input type='hidden' name='email_action'>
 <input type='hidden' name='submitted_by' value='$sub_e_mail'>
