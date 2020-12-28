@@ -367,7 +367,10 @@ if ($special_instructions) {;
 	  <input type= 'hidden' name='case_num' value='$case_num'>
 	  <input type= 'hidden' name='sub_name' value='$sub_name'>
 	  <input type= 'hidden' name='sub_email' value='$sub_email'>
-	  <input type= 'hidden' name='status' value='$status'>";
+	  <input type= 'hidden' name='status' value='$status'>
+	  <input type= 'hidden' name='short_desc' value='$short_desc'>
+	  <input type= 'hidden' name='problem' value='$problem'>
+	  <input type= 'hidden' name='assigned_to' value='$assigned_to'>";
 	  print "
 	  	<input type='hidden' name='comp_case_num' value='$comp_case_num'>
 		<table width='95%' height='425'  border='1' cellpadding='1' cellspacing='0' bordercolor='#C0C0C0' bgcolor='#909090'>
