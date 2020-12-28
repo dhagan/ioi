@@ -56,7 +56,6 @@ $problem = $cgi->param('problem');
 $comp_case_num = $cgi->param('comp_case_num');
 $customer = $cgi->param('submitted_by');
 $newTicket = $cgi->param('newticket');
-$assigned_to = $cgi->param('assigned_to');
 $attachment1 = $cgi->param('attachment1');
 $attachment2 = $cgi->param('attachment2');
 $attachment3 = $cgi->param('attachment3');
@@ -86,8 +85,6 @@ if ($newTicket eq "true")
 }
 if ($allow_submit == 1)
 {
-    nonTechCheck($user, $case_num, $subject, $submit_time, $date, $assigned_to);
-	
 ### DJH 12/27/2020 
 ###  re-purpose this block and more for create and update
 ###
@@ -146,6 +143,8 @@ if ($allow_submit == 1)
 	if ($attachment1 ne ""){attachmentUpload("attachment1");}
 	if ($attachment2 ne ""){attachmentUpload("attachment2");}
 	if ($attachment3 ne ""){attachmentUpload("attachment3");}
+
+    nonTechCheck($user, $case_num, $subject, $submit_time, $date, $assigned_to, $sub_e_mail, $sub_name);
 
 }
 
@@ -600,38 +599,33 @@ sub nonTechCheck
         my $subject = $_[2];
         my $timestamp = $_[3] . " " . $_[4];
         my $assigned_to = $_[5];
+        my $sub_e_mail = $_[6];
+        my $sub_name = $_[7];
 
         my $problem = get_ticket_descriptions( $case_num, false);
         
-       	$sth = $dbh->prepare("SELECT sa_login FROM staff WHERE (sa_login = '$user' OR sa_e_mail = '$user') AND sa_dept <> 'IT'");
-        $sth->execute();
-
-
         #If update is by a non-tech
-        if($sth->fetchrow_array()) {
-                my $assigned;
                 my $email;
                 my $body;
-                my $email_subject = "Ticket # $case_num has been updated by $user";
+                my $email_subject = "Ticket # $case_num has been updated by $sub_name <$sub_e_mail>";
                 
                 #If tech is available notify that tech, otherwise notify all other techs
                 if(checkTechStatus($assigned_to) eq "available") {
                         $sth = $dbh->prepare("SELECT sa_e_mail FROM staff WHERE sa_login = (SELECT assigned_to FROM problems WHERE case_num = '$case_num')");
                         $sth->execute();
                         ($email) = $sth->fetchrow_array();
-                        $body = "Ticket $case_num has been updated by $user. Please log onto the helpdesk to see what action is required\n\nTime Sent: $timestamp\n\nSubject: $subject \n\n Problem: $problem\n\n To update this ticket please go to http://dashboard.iointegration.com/cgi-bin/respondTicket.cgi?case_num=$case_num&user=$assigned";
-			sendMail($email,$email_subject,$body);
+                        $body = "Ticket $case_num has been updated by $sub_name <$sub_e_mail>. Please log onto the helpdesk to see what action is required\n\nTime Sent: $timestamp\n\nSubject: $subject \n\n Problem: $problem\n\n To update this ticket please go to http://dashboard.iointegration.com/cgi-bin/respondTicket.cgi?case_num=$case_num&user=$assigned_to";
+			### DJH 12/27/2020 sendMail($email,$email_subject,$body);
                 } else {
                         $sth = $dbh->prepare("SELECT sa_login,sa_e_mail FROM staff WHERE sa_dept = 'IT' AND sa_access = 'Active'");
 			$sth->execute();
 			while ((my $sa_login, $email) = $sth->fetchrow_array())
 			{
 				$body = "This ticket is assigned to $assigned_to, who is unavailable right now. Please determine if this ticket requires attention.\n\n" .
-                                        "Ticket $case_num has been updated by $user. Please log onto the helpdesk to see what action is required\n\nTime Sent: $timestamp\n\nSubject: $subject \n\n Problem: $problem\n\n To update this ticket please go to http://dashboard.iointegration.com/cgi-bin/respondTicket.cgi?case_num=$case_num&user=$sa_login";
-				sendMail($email,$email_subject,$body);
+                                        "Ticket $case_num has been updated by $sub_name <$sub_e_mail>. Please log onto the helpdesk to see what action is required\n\nTime Sent: $timestamp\n\nSubject: $subject \n\n Problem: $problem\n\n To update this ticket please go to http://dashboard.iointegration.com/cgi-bin/respondTicket.cgi?case_num=$case_num&user=$sa_login";
+				### DJH 12/27/2020 sendMail($email,$email_subject,$body);
 			}
                 }
-        }
 }
 
 sub get_ticket_descriptions {
