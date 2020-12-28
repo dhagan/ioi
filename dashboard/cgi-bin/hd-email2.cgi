@@ -114,7 +114,7 @@ if ($allow_submit == 1)
                 $description = $dbh->quote($problem);
                 my $description_updated_by = $dbh->quote("$sub_name");
                 my $action = "Updated by $sub_name";
-                my $is_customer = false;
+                my $is_customer = 1;
                 my $statement = "INSERT INTO `descriptions` (problem_id, description, status, created, description_updated_by, action, is_customer) VALUES ('$problem_id', $description, '$status', NOW(), $description_updated_by, '$action', '$is_customer')";
                 $sth = $dbh->prepare($statement);
 		$sth->execute();
@@ -134,7 +134,7 @@ if ($allow_submit == 1)
                 $description = $dbh->quote($problem);
                 my $description_updated_by = $sub_name . "<" . $sub_e_mail . ">";
                 my $action = "Updated by $sub_name";
-                my $is_customer = true;
+                my $is_customer = 1;
                 my $statement = "INSERT INTO `descriptions` (problem_id, description, status, created, description_updated_by, action, is_customer) VALUES ('$problem_id', $description, '$status', NOW(), '$description_updated_by', '$action', '$is_customer')";
                 $sth = $dbh->prepare($statement);
 		$sth->execute();
@@ -605,7 +605,7 @@ sub nonTechCheck
         my $sub_e_mail = $_[6];
         my $sub_name = $_[7];
 
-        my $problem = get_ticket_descriptions( $case_num, false);
+        my $problem = get_ticket_descriptions( $case_num, 1);
         
         #If update is by a non-tech
                 my $email;
@@ -658,8 +658,7 @@ sub newTicketEmail
         my $assigned_to = $_[4];
         my $sub_e_mail = $_[5];
         my $sub_name = $_[6];
-        my $problem = get_ticket_descriptions( $case_num, false);
-        
+        my $problem = &get_ticket_descriptions( $case_num, 1);
                 my $email;
                 my $body;
                 my $email_subject = "New Ticket # $case_num has been created by $sub_name <$sub_e_mail> using helpdesk.cgi";
@@ -685,7 +684,7 @@ sub updateTicketEmail
         my $assigned_to = $_[4];
         my $sub_e_mail = $_[5];
         my $sub_name = $_[6];
-        my $problem = get_ticket_descriptions( $case_num, false);
+        my $problem = get_ticket_descriptions( $case_num, 1);
         
         my $email_subject = "Ticket # $case_num has been updated by $sub_name <$sub_e_mail> using helpdesk.cgi";
         $sth = $dbh->prepare("SELECT sa_e_mail FROM staff WHERE sa_login='$assigned_to'");

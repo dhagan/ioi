@@ -174,7 +174,7 @@ body {
           </select></td>
 </tr>
     <tr>
-      <td>Subject: <input name=\"subject\" type=\"text\" size=\"75\"></td>
+      <td>Subject: <input name=\"short_desc\" type=\"text\" size=\"75\"></td>
     </tr>
     <tr>
       <td colspan=\"4\"><div align=\"left\">Problem: </div></td>

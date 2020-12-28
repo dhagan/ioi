@@ -370,7 +370,6 @@ if ($special_instructions) {;
 	  <input type= 'hidden' name='sub_email' value='$sub_email'>
 	  <input type= 'hidden' name='status' value='$status'>
 	  <input type= 'hidden' name='short_desc' value='$short_desc'>
-	  <input type= 'hidden' name='problem' value='$problem'>
 	  <input type= 'hidden' name='assigned_to' value='$assigned_to'>";
 	  print "
 	  	<input type='hidden' name='comp_case_num' value='$comp_case_num'>
