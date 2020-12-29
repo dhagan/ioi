@@ -468,6 +468,7 @@ if ($special_instructions) {;
 	print "	
 	  </div></td></tr></table>
 	  <p>";
+	  print "<input id='cancel' type='button' value='Cancel' onclick=\"window.location='helpdesk.cgi'\"/>&nbsp;&nbsp;";
 	  print"<input type='submit' name='button' value='Update Ticket' onClick='formOnClick(\"none\")'>
 	</p>
 	  </form>

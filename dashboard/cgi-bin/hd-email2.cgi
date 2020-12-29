@@ -635,9 +635,9 @@ sub nonTechCheck
 sub get_ticket_descriptions {
     my $case_num = $_[0];
     my $is_customer = $_[1];
-    my $query = "SELECT d.description, d.description_updated_by, d.status, d.action, d.created FROM descriptions d JOIN problems p ON p.id = d.problem_id WHERE p.case_num = '$case_num' ORDER BY d.created DESC";
+    my $query = "SELECT d.description, d.description_updated_by, d.status, d.action, d.created FROM descriptions d JOIN problems p ON p.id = d.problem_id WHERE p.case_num = '$case_num' ORDER BY d.created DESC LIMIT 1";
     if ($is_customer) {
-	$query = "SELECT d.description, d.description_updated_by, d.status, d.action, d.created FROM descriptions d JOIN problems p ON p.id = d.problem_id WHERE p.case_num = '$case_num' AND d.is_customer = '1' ORDER BY d.created DESC";
+	$query = "SELECT d.description, d.description_updated_by, d.status, d.action, d.created FROM descriptions d JOIN problems p ON p.id = d.problem_id WHERE p.case_num = '$case_num' AND d.is_customer = '1' ORDER BY d.created DESC LIMIT 1";
     }
     $sth = $dbh->prepare($query);
     $sth->execute();

@@ -204,8 +204,11 @@ body {
 
   </table>
   <p class=\"style1\">
-	  		<input type='submit' name='button' value='Create Ticket' onClick='formOnClick(\"none\")'>
-    <input type=\"reset\" name=\"Reset\" value=\"Reset\">
+<input id='cancel' type='button' value='Cancel' onclick=\"window.location='helpdesk.cgi'\"/>&nbsp;&nbsp;
+<input type='submit' name='button' value='Create Ticket' onClick='formOnClick(\"none\")'>
+<!--
+<input type=\"reset\" name=\"Reset\" value=\"Reset\">
+-->
   </p>
 </div>
 </form>
