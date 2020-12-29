@@ -88,10 +88,10 @@ if ($allow_submit == 1)
 ### DJH 12/27/2020 
 ###  re-purpose this block and more for create and update
 ###
-	$status = 'Pending IOI';
 	#If this is a new ticket
 	if ($newTicket eq "true" and $case_num eq "")
 	{	
+		$status = 'Unassigned';
 		$case_num = getCaseNumber();
 		$subject = $dbh->quote($subject);
 		$date = $dbh->quote($date);
@@ -124,6 +124,7 @@ if ($allow_submit == 1)
 		
 	#If an existing ticket
 	} elsif ($case_num ne "") {
+		$status = 'Pending IOI';
 		$subject = $dbh->quote($subject);
 		$statement = "UPDATE problems SET date_mod = '$date', time_mod = '$submit_time', status='$status' WHERE case_num = '$case_num'";
                 $sth = $dbh->prepare($statement) or die print $dbh->errstr;

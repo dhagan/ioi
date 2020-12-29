@@ -462,7 +462,7 @@ if ($special_instructions) {;
 				$filename = $';
 			}
 		
-			print "<td><a target='new' href='http://dashboard.iointegration.com/uploadFileDir/dashboard/$case_num/$filename'>$filename</a> &nbsp;&nbsp;</td></tr>";
+			print "<td><a target='new' href='http://dashboard2.iointegration.com/uploadFileDir/dashboard/$case_num/$filename'>$filename</a> &nbsp;&nbsp;</td></tr>";
 		}
 		print "</table>";
 	print "	
@@ -697,7 +697,7 @@ sub splitProblem
             $ordering = 'ASC';
         }
 
-        my $query = "SELECT d.description, d.description_updated_by, d.status, d.action, d.created FROM descriptions d JOIN problems p ON p.id = d.problem_id WHERE p.case_num = '$case_num' ORDER BY d.created $ordering"; 
+        my $query = "SELECT d.description, d.description_updated_by, d.status, d.action, d.created FROM descriptions d JOIN problems p ON p.id = d.problem_id WHERE p.case_num = '$case_num' AND d.is_customer='1' ORDER BY d.created $ordering"; 
         $sth = $dbh->prepare($query);
         $sth->execute();
         my $return = '';

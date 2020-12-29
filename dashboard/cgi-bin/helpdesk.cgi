@@ -82,7 +82,7 @@ $order_by = $cgi->param('order_by');
 $order_by = 'case_num' if ($order_by eq "");
 autoRefresh();
 background();
-$statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type, assigned_to FROM problems WHERE submitted_by like '$user' AND (status = 'Assigned' OR status= 'Pending Client' OR status= 'Pending IOI' OR status= 'Pending IOI Development' OR status= 'Pending IOI OUT' OR status= 'Pending Vendor' ) ORDER BY " . $order_by;
+$statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type, assigned_to FROM problems WHERE submitted_by like '$user' AND (status = 'Assigned' OR status= 'Pending Client' OR status= 'Pending IOI' OR status= 'Pending IOI Development' OR status= 'Pending IOI OUT' OR status= 'Pending Vendor' OR status= 'Unassigned' ) ORDER BY " . $order_by;
 #$statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type, assigned_to FROM problems WHERE submitted_by like '$user' ORDER BY " . $order_by;
 $statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type, assigned_to FROM problems WHERE submitted_by like '$user' AND status = 'Awaiting Bug Fix' ORDER BY " . $order_by if (param('showBugTickets'));
 $statement = "SELECT status, submitted_by, case_num, date_mod, time_mod, short_desc, prob_prod_link, prob_comp_link, updated_by, priority_type, assigned_to FROM problems WHERE submitted_by like '$user' AND status = 'Awaiting Feature Request' ORDER BY " . $order_by if (param('showFeatureTickets'));
