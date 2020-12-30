@@ -125,6 +125,22 @@ if ($allow_submit == 1)
 	#If an existing ticket
 	} elsif ($case_num ne "") {
 		$status = 'Pending IOI';
+
+
+        $sth = $dbh->prepare("SELECT sa_e_mail FROM staff WHERE sa_login='$assigned_to'");
+        $sth->execute();
+        ($sa_email) = $sth->fetchrow_array();
+        $sa_email = "techs\@iointegration.com" if ($sa_email eq ""); #Just in case all other checks fail for the assigned_to
+        $sth = $dbh->prepare("SELECT ss.status FROM staff s LEFT JOIN staff_status ss ON s.id_num = ss.staff_id WHERE s.sa_access = 'Active' AND sa_login='$assigned_to'");
+        $sth->execute();
+        ($staff_status) = $sth->fetchrow_array();
+        $sa_email = "techs\@iointegration.com" if ($staff_status eq "Vacation" or $staff_status eq "Traveling" or $staff_status eq "CustomerWorkOrder"  or $staff_status eq "CustomerSupport" or $staff_status eq "DontEven" or $staff_status eq "Out");
+        if ($sa_email eq "techs\@iointegration.com")
+        {
+		$status = 'Pending IOI OUT';
+
+	}
+
 		$subject = $dbh->quote($subject);
 		$statement = "UPDATE problems SET date_mod = '$date', time_mod = '$submit_time', status='$status' WHERE case_num = '$case_num'";
                 $sth = $dbh->prepare($statement) or die print $dbh->errstr;
@@ -618,7 +634,7 @@ sub nonTechCheck
                         $sth = $dbh->prepare("SELECT sa_e_mail FROM staff WHERE sa_login = (SELECT assigned_to FROM problems WHERE case_num = '$case_num')");
                         $sth->execute();
                         ($email) = $sth->fetchrow_array();
-                        $body = "Ticket $case_num has been updated by $sub_name <$sub_e_mail>. Please log onto the helpdesk to see what action is required\n\nTime Sent: $timestamp\n\nSubject: $subject \n\n Problem: $problem\n\n To update this ticket please go to http://dashboard.iointegration.com/dashboard/respondTicket.cgi?case_num=$case_num&user=$assigned_to";
+                        $body = "Ticket $case_num has been updated by $sub_name <$sub_e_mail>. Please log onto the helpdesk to see what action is required\n\nTime Sent: $timestamp\n\nSubject: $subject \n\n Problem: $problem\n\n To update this ticket please go to http://dashboard.iointegration.com/IOITicket.php?case_num=$case_num&user=$assigned_to";
 			sendMail($email,$email_subject,$body);
                 } else {
                         $sth = $dbh->prepare("SELECT sa_login,sa_e_mail FROM staff WHERE sa_dept = 'IT' AND sa_access = 'Active'");
@@ -626,7 +642,7 @@ sub nonTechCheck
 			while ((my $sa_login, $email) = $sth->fetchrow_array())
 			{
 				$body = "This ticket is assigned to $assigned_to, who is unavailable right now. Please determine if this ticket requires attention.\n\n" .
-                                        "Ticket $case_num has been updated by $sub_name <$sub_e_mail>. Please log onto the helpdesk to see what action is required\n\nTime Sent: $timestamp\n\nSubject: $subject \n\n Problem: $problem\n\n To update this ticket please go to http://dashboard.iointegration.com/dashboard/respondTicket.cgi?case_num=$case_num&user=$sa_login";
+                                        "Ticket $case_num has been updated by $sub_name <$sub_e_mail>. Please log onto the helpdesk to see what action is required\n\nTime Sent: $timestamp\n\nSubject: $subject \n\n Problem: $problem\n\n To update this ticket please go to http://dashboard.iointegration.com/IOITicket.php?case_num=$case_num&user=$sa_login";
 				sendMail($email,$email_subject,$body);
 			}
                 }
@@ -669,11 +685,11 @@ sub newTicketEmail
 			$sth->execute();
 			while ((my $sa_login, $email) = $sth->fetchrow_array())
 			{
-				$body = "Ticket $case_num has been created by $sub_name <$sub_e_mail> using helpdesk.cgi Please log onto the helpdesk to see what action is required\n\nTime Sent: $timestamp\n\nSubject: $subject \n\n Problem: $problem\n\n To update this ticket please go to http://dashboard.iointegration.com/dashboard/respondTicket.cgi?case_num=$case_num&user=$sa_login";
+				$body = "Ticket $case_num has been created by $sub_name <$sub_e_mail> using helpdesk.cgi Please log onto the helpdesk to see what action is required\n\nTime Sent: $timestamp\n\nSubject: $subject \n\n Problem: $problem\n\n To update this ticket please go to http://dashboard.iointegration.com/IOITicket.php?case_num=$case_num&user=$sa_login";
 				sendMail($email,$email_subject,$body);
 				
 				### DJH comment this in afer testing 12/27/2020
-				last;
+				##last;
 			}
 }
 
@@ -703,16 +719,16 @@ sub updateTicketEmail
 	   while ((my $sa_login, $email) = $sth->fetchrow_array())
 	   {
 				$body = "This ticket is assigned to $assigned_to, who is unavailable right now. Please determine if this ticket requires attention.\n\n" .
-                                        "Ticket $case_num has been updated by $sub_name <$sub_e_mail> using helpdesk.cgi. Please log onto the helpdesk to see what action is required\n\nTime Sent: $timestamp\n\nSubject: $subject \n\n Problem: $problem\n\n To update this ticket please go to http://dashboard.iointegration.com/dashboard/respondTicket.cgi?case_num=$case_num&user=$sa_login";
+                                        "Ticket $case_num has been updated by $sub_name <$sub_e_mail> using helpdesk.cgi. Please log onto the helpdesk to see what action is required\n\nTime Sent: $timestamp\n\nSubject: $subject \n\n Problem: $problem\n\n To update this ticket please go to http://dashboard.iointegration.com/IOITicket.php?case_num=$case_num&user=$sa_login";
 				sendMail($email,$email_subject,$body);
 				#
 				### DJH comment this in afer testing 12/27/2020
-				last;
+				##last;
 	   }
         }
         else
         {
-                        $body = "Ticket $case_num has been updated by $sub_name <$sub_e_mail> using helpdesk.cgi. Please log onto the helpdesk to see what action is required\n\nTime Sent: $timestamp\n\nSubject: $subject \n\n Problem: $problem\n\n To update this ticket please go to http://dashboard.iointegration.com/dashboard/respondTicket.cgi?case_num=$case_num&user=$assigned_to";
+                        $body = "Ticket $case_num has been updated by $sub_name <$sub_e_mail> using helpdesk.cgi. Please log onto the helpdesk to see what action is required\n\nTime Sent: $timestamp\n\nSubject: $subject \n\n Problem: $problem\n\n To update this ticket please go to http://dashboard.iointegration.com/IOITicket.php?case_num=$case_num&user=$assigned_to";
                         sendMail($sa_email,$email_subject,$body);
          } 
 }

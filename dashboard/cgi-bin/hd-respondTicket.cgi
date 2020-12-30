@@ -462,7 +462,7 @@ if ($special_instructions) {;
 				$filename = $';
 			}
 		
-			print "<td><a target='new' href='http://dashboard2.iointegration.com/uploadFileDir/dashboard/$case_num/$filename'>$filename</a> &nbsp;&nbsp;</td></tr>";
+			print "<td><a target='new' href='http://dashboard.iointegration.com/uploadFileDir/dashboard/$case_num/$filename'>$filename</a> &nbsp;&nbsp;</td></tr>";
 		}
 		print "</table>";
 	print "	
